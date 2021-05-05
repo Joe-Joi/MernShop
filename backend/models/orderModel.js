@@ -1,11 +1,32 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-const orderSchema = mongoose.Schema(
+const reviewSchema = mongoose.Schema(
   {
+    name: { type: String, required: true },
+    rating: { type: Number, required: true },
+    comment: { type: String, required: true },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'User',
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const orderSchema = mongoose.Schema(
+  {
+    Buyer: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'Buyer',
+    },
+    Seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'Seller',
     },
     orderItems: [
       {
@@ -20,6 +41,7 @@ const orderSchema = mongoose.Schema(
         },
       },
     ],
+    reviews: [reviewSchema],
     shippingAddress: {
       address: { type: String, required: true },
       city: { type: String, required: true },
@@ -71,8 +93,8 @@ const orderSchema = mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
-const Order = mongoose.model('Order', orderSchema)
+const Order = mongoose.model('Order', orderSchema);
 
-export default Order
+export default Order;
