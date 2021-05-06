@@ -9,6 +9,7 @@ import CartScreen from './screens/CartScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import MyOrderScreen from './screens/MyOrderScreen';
 import ShippingScreen from './screens/ShippingScreen';
 import PaymentScreen from './screens/PaymentScreen';
 import PlaceOrderScreen from './screens/PlaceOrderScreen';
@@ -19,6 +20,7 @@ import ProductListScreen from './screens/ProductListScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
 import ProductCreateScreen from './screens/ProductCreateScreen';
 import OrderListScreen from './screens/OrderListScreen';
+import MyProductScreen from './screens/MyProductScreen';
 
 const App = () => {
   return (
@@ -33,10 +35,18 @@ const App = () => {
           <Route path="/login" component={LoginScreen} />
           <Route path="/register" component={RegisterScreen} />
           <Route path="/profile" component={ProfileScreen} />
+          <Route path="/myorders" component={MyOrderScreen} />
+          <Route path="/newproduct" component={ProductCreateScreen} />
           <Route path="/product/:id" component={ProductScreen} />
           <Route path="/cart/:id?" component={CartScreen} />
           <Route path="/admin/userlist" component={UserListScreen} />
           <Route path="/admin/user/:id/edit" component={UserEditScreen} />
+          <Route path="/myproducts" component={MyProductScreen} exact />
+          <Route
+            path="/myproducts/:pageNumber"
+            component={MyProductScreen}
+            exact
+          />
           <Route
             path="/admin/productlist"
             component={ProductListScreen}
@@ -48,7 +58,6 @@ const App = () => {
             exact
           />
           <Route path="/admin/product/:id/edit" component={ProductEditScreen} />
-          <Route path="/admin/product/new" component={ProductCreateScreen} />
           <Route path="/admin/orderlist" component={OrderListScreen} />
           <Route path="/search/:keyword" component={HomeScreen} exact />
           <Route path="/page/:pageNumber" component={HomeScreen} exact />

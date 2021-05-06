@@ -5,14 +5,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
-import { listProducts, deleteProduct } from '../actions/productActions';
+import { deleteProduct, listMyProducts } from '../actions/productActions';
+import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
 
-const ProductListScreen = ({ history, match }) => {
+const MyProductScreen = ({ history, match }) => {
   const pageNumber = match.params.pageNumber || 1;
 
   const dispatch = useDispatch();
-  const productList = useSelector((state) => state.productList);
-  const { loading, error, products, page, pages } = productList;
+
+  const myProductList = useSelector((state) => state.myProductList);
+
+  const { loading, error, products, page, pages } = myProductList;
 
   const productDelete = useSelector((state) => state.productDelete);
   const {
@@ -33,12 +36,25 @@ const ProductListScreen = ({ history, match }) => {
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    if (!userInfo || !userInfo.isAdmin) {
+    dispatch({ type: PRODUCT_CREATE_RESET });
+
+    if (!userInfo) {
       history.push('/login');
     }
-
-    dispatch(listProducts('', pageNumber));
-  }, [dispatch, history, userInfo, successDelete, pageNumber]);
+    if (successCreate) {
+      history.push('/myproducts');
+    } else {
+      dispatch(listMyProducts(pageNumber));
+    }
+  }, [
+    dispatch,
+    history,
+    userInfo,
+    successDelete,
+    successCreate,
+    createdProduct,
+    pageNumber,
+  ]);
 
   const deleteHandler = (id) => {
     if (window.confirm('Are you sure?')) {
@@ -50,7 +66,14 @@ const ProductListScreen = ({ history, match }) => {
     <>
       <Row className="align-items-center">
         <Col>
-          <h1>ALL SELLING BOOKS</h1>
+          <h1>MY BOOKS</h1>
+        </Col>
+        <Col className="text-right">
+          <LinkContainer to={'/newproduct'}>
+            <Button className="my-3">
+              <i className="fas fa-plus"></i> SELL ANOTHER BOOK
+            </Button>
+          </LinkContainer>
         </Col>
       </Row>
       {loadingDelete && <Loader />}
@@ -62,7 +85,6 @@ const ProductListScreen = ({ history, match }) => {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        //this is for admin users
         <>
           <Table striped bordered hover responsive className="table-sm">
             <thead>
@@ -73,7 +95,6 @@ const ProductListScreen = ({ history, match }) => {
                 <th>PRICE</th>
                 <th>CATEGORY</th>
                 <th>CONDITION</th>
-                <th>SELLER</th>
                 <th></th>
               </tr>
             </thead>
@@ -86,7 +107,6 @@ const ProductListScreen = ({ history, match }) => {
                   <td>${product.price}</td>
                   <td>{product.category}</td>
                   <td>{product.condition}</td>
-                  <td>{product.sellerEmail}</td>
                   <td>
                     <LinkContainer to={`/admin/product/${product._id}/edit`}>
                       <Button variant="light" className="btn-sm">
@@ -105,11 +125,11 @@ const ProductListScreen = ({ history, match }) => {
               ))}
             </tbody>
           </Table>
-          <Paginate pages={pages} page={page} location="adminList" />
+          <Paginate pages={pages} page={page} location="myProductScreen" />
         </>
       )}
     </>
   );
 };
 
-export default ProductListScreen;
+export default MyProductScreen;

@@ -27,12 +27,28 @@ const getProducts = asyncHandler(async (req, res) => {
   res.json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
+// @desc    Fetch products by seller
+// @route   GET /api/myproducts/
+// @access  Public
+const getMyProducts = asyncHandler(async (req, res) => {
+  const pageSize = 10;
+  const page = Number(req.query.pageNumber) || 1;
+  const count = await Product.countDocuments({
+    sellerEmail: req.user.sellerEmail,
+  });
+  const products = await Product.find({ sellerEmail: req.user.email })
+    .limit(pageSize)
+    //eg. if page is 3, then skip the first 2 pages' products
+    .skip(pageSize * (page - 1));
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
+});
+
 // @desc    Fetch single product
 // @route   GET /api/products/:id
 // @access  Public
 const getProductById = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+  if (!id.match(/^[0-9a-fA-F]{20,26}$/)) {
     throw new Error('Invalid id format!');
   }
 
@@ -51,7 +67,7 @@ const getProductById = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const deleteProduct = asyncHandler(async (req, res) => {
   const idValue = req.params.id;
-  if (idValue.match(/^[0-9a-fA-F]{24}$/)) {
+  if (idValue.match(/^[0-9a-fA-F]{20-26}$/)) {
     throw new Error('Invalid id format!');
   }
 
@@ -59,7 +75,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
   if (product) {
     await product.remove();
-    res.json({ message: 'Product removed!?' });
+    res.json({ message: 'Product removed!' });
   } else {
     res.status(404);
     throw new Error('Product not found');
@@ -186,4 +202,5 @@ export {
   updateProduct,
   createProductReview,
   getTopProducts,
+  getMyProducts,
 };

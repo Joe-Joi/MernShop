@@ -34,20 +34,8 @@ const ProductCreateScreen = ({ history }) => {
   useEffect(() => {
     if (successCreate) {
       dispatch({ type: PRODUCT_CREATE_RESET });
-      history.push('/admin/productlist');
-    } else {
-      //   if (!product.name || product._id !== productId) {
-      //     dispatch(listProductDetails(productId));
-      //   } else {
-      //   setName(product.name);
-      //   setPrice(product.price);
-      //   setImage(product.image);
-      //   setAuthor(product.author);
-      //   setCondition(product.condition);
-      //   setCategory(product.category);
-      //   setDescription(product.description);
+      history.push('/myproducts');
     }
-    // }
   }, [dispatch, history, product, successCreate]);
 
   const uploadFileHandler = async (e) => {
