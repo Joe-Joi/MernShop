@@ -10,6 +10,7 @@ const Paginate = ({ pages, page, location, keyword = '' }) => {
           <LinkContainer
             key={x + 1}
             to={
+              //depends on the value of arg location, jump to different screen.
               location === 'home'
                 ? keyword
                   ? `/search/${keyword}/page/${x + 1}`

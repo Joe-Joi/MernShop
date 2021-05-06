@@ -70,12 +70,18 @@ const deleteProduct = asyncHandler(async (req, res) => {
   if (idValue.match(/^[0-9a-fA-F]{20-26}$/)) {
     throw new Error('Invalid id format!');
   }
-
+  const user = req.user;
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    await product.remove();
-    res.json({ message: 'Product removed!' });
+    //check if this delete action allowed. only admin or the seller can delete the book
+    if (product.sellerEmail == user.email || user.isAdmin) {
+      await product.remove();
+      res.json({ message: 'Product removed!' });
+    } else {
+      res.status(404);
+      throw new Error('Action not authorized!');
+    }
   } else {
     res.status(404);
     throw new Error('Product not found');
@@ -125,19 +131,27 @@ const updateProduct = asyncHandler(async (req, res) => {
   } = req.body;
 
   const product = await Product.findById(req.params.id);
-
+  const user = req.user;
+  console.log('Test ', product.sellerEmail);
+  console.log('Test ', req.user);
   if (product) {
-    product.name = name;
-    product.price = price;
-    product.sellerEmail = req.user.email;
-    product.description = description;
-    product.image = image;
-    product.author = author;
-    product.category = category;
-    product.condition = condition;
+    //check if this update action allowed. only admin or the seller can delete the book
+    if (product.sellerEmail == user.email || user.isAdmin) {
+      product.name = name;
+      product.price = price;
+      product.sellerEmail = req.user.email;
+      product.description = description;
+      product.image = image;
+      product.author = author;
+      product.category = category;
+      product.condition = condition;
 
-    const updatedProduct = await product.save();
-    res.json(updatedProduct);
+      const updatedProduct = await product.save();
+      res.json(updatedProduct);
+    } else {
+      res.status(404);
+      throw new Error('Action not authorized!');
+    }
   } else {
     res.status(404);
     throw new Error('Product not found!');

@@ -21,7 +21,7 @@ router.get('/top', getTopProducts);
 router
   .route('/:id')
   .get(getProductById)
-  .delete(protect, protect, deleteProduct)
-  .put(protect, protect, updateProduct);
+  .delete(protect, deleteProduct)
+  .put(protect, updateProduct);
 
 export default router;
