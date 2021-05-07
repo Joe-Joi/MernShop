@@ -23,16 +23,20 @@ import {
   PRODUCT_TOP_FAIL,
   MY_PRODUCT_LIST_SUCCESS,
   MY_PRODUCT_LIST_FAIL,
+  PRODUCT_STATUS_UPDATE_REQUEST,
+  PRODUCT_STATUS_UPDATE_SUCCESS,
 } from '../constants/productConstants';
 import { logout } from './userActions';
 
-export const listProducts = (keyword = '', pageNumber = '') => async (
-  dispatch
-) => {
+export const listProducts = (
+  keyword = '',
+  pageNumber = '',
+  status = ''
+) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST });
     const { data } = await axios.get(
-      `/api/products?keyword=${keyword}&pageNumber=${pageNumber}`
+      `/api/products?status=${status}&keyword=${keyword}&pageNumber=${pageNumber}`
     );
 
     dispatch({
@@ -172,6 +176,51 @@ export const createProduct = (product) => async (dispatch, getState) => {
     }
     dispatch({
       type: PRODUCT_CREATE_FAIL,
+      payload: message,
+    });
+  }
+};
+
+export const updateProductStatus = (productId, status) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: PRODUCT_STATUS_UPDATE_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/products/update/status/${productId}`,
+      { status },
+      config
+    );
+
+    dispatch({
+      type: PRODUCT_STATUS_UPDATE_SUCCESS,
+      payload: data,
+    });
+    dispatch({ type: PRODUCT_DETAILS_FAIL, payload: data });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
+    dispatch({
+      type: PRODUCT_UPDATE_FAIL,
       payload: message,
     });
   }

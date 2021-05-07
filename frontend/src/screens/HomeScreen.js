@@ -21,7 +21,8 @@ const HomeScreen = ({ match }) => {
   const { loading, error, products, page, pages } = productList;
 
   useEffect(() => {
-    dispatch(listProducts(keyword, pageNumber));
+    //HomeScreen only shows books on selling
+    dispatch(listProducts(keyword, pageNumber, 'selling'));
   }, [dispatch, keyword, pageNumber]);
 
   return (

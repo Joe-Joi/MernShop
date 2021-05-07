@@ -10,11 +10,11 @@ import {
   listProductDetails,
   createProductReview,
 } from '../actions/productActions';
+import { saveOrderProductInfo } from '../actions/orderActions';
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants';
-import { bold } from 'colors';
+import { CART_PRODUCT_INFO } from '../constants/orderConstants';
 
 const ProductScreen = ({ history, match }) => {
-  const [qty, setQty] = useState(1);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
 
@@ -44,8 +44,9 @@ const ProductScreen = ({ history, match }) => {
     }
   }, [dispatch, match, successProductReview]);
 
-  const addToCartHandler = () => {
-    history.push(`/cart/${match.params.id}?qty=${qty}`);
+  const requestBookHandler = () => {
+    dispatch(saveOrderProductInfo(product));
+    history.push(`/shipping`);
   };
 
   const submitHandler = (e) => {
@@ -115,10 +116,10 @@ const ProductScreen = ({ history, match }) => {
 
                   <ListGroup.Item>
                     <Button
-                      onClick={addToCartHandler}
+                      onClick={requestBookHandler}
                       className="btn-block"
                       type="button"
-                      disabled={product.countInStock === 0}
+                      disabled={product.status !== 'selling'}
                     >
                       Request It
                     </Button>

@@ -7,6 +7,7 @@ import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
 import { listProducts, deleteProduct } from '../actions/productActions';
 
+//this screen is for admin. Admin can view all on selling books, and delete any of them.
 const ProductListScreen = ({ history, match }) => {
   const pageNumber = match.params.pageNumber || 1;
 
@@ -20,14 +21,6 @@ const ProductListScreen = ({ history, match }) => {
     error: errorDelete,
     success: successDelete,
   } = productDelete;
-
-  const productCreate = useSelector((state) => state.productCreate);
-  const {
-    loading: loadingCreate,
-    error: errorCreate,
-    success: successCreate,
-    product: createdProduct,
-  } = productCreate;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -55,14 +48,11 @@ const ProductListScreen = ({ history, match }) => {
       </Row>
       {loadingDelete && <Loader />}
       {errorDelete && <Message variant="danger">{errorDelete}</Message>}
-      {loadingCreate && <Loader />}
-      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        //this is for admin users
         <>
           <Table striped bordered hover responsive className="table-sm">
             <thead>
@@ -88,11 +78,6 @@ const ProductListScreen = ({ history, match }) => {
                   <td>{product.condition}</td>
                   <td>{product.sellerEmail}</td>
                   <td>
-                    <LinkContainer to={`/admin/product/${product._id}/edit`}>
-                      <Button variant="light" className="btn-sm">
-                        <i className="fas fa-edit"></i>
-                      </Button>
-                    </LinkContainer>
                     <Button
                       variant="danger"
                       className="btn-sm"

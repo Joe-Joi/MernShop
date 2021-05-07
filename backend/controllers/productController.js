@@ -7,7 +7,7 @@ import Product from '../models/productModel.js';
 const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
-
+  const status = req.query.status;
   const keyword = req.query.keyword
     ? {
         name: {
@@ -17,7 +17,10 @@ const getProducts = asyncHandler(async (req, res) => {
         },
       }
     : {};
-
+  if (status) {
+    keyword['status'] = status;
+  }
+  console.log(keyword);
   const count = await Product.countDocuments({ ...keyword });
   const products = await Product.find({ ...keyword })
     .limit(pageSize)
@@ -116,6 +119,22 @@ const createProduct = asyncHandler(async (req, res) => {
   res.status(200).json(createdProduct);
 });
 
+// @desc    Update the status of a book
+// @route   PUT update/status/:id
+// @access  Private
+const updateProductStatus = asyncHandler(async (req, res) => {
+  const { status } = req.body;
+  await Product.updateOne(
+    { _id: req.params.id },
+    { status: status },
+    (err, res) => {
+      if (err) {
+        throw new Error(err);
+      }
+    }
+  );
+});
+
 // @desc    Update a product
 // @route   PUT /api/products/:id
 // @access  Private/Admin
@@ -132,11 +151,9 @@ const updateProduct = asyncHandler(async (req, res) => {
 
   const product = await Product.findById(req.params.id);
   const user = req.user;
-  console.log('Test ', product.sellerEmail);
-  console.log('Test ', req.user);
   if (product) {
-    //check if this update action allowed. only admin or the seller can delete the book
-    if (product.sellerEmail == user.email || user.isAdmin) {
+    //check if this update action allowed. only the seller can update the book
+    if (product.sellerEmail == user.email) {
       product.name = name;
       product.price = price;
       product.sellerEmail = req.user.email;
@@ -217,4 +234,5 @@ export {
   createProductReview,
   getTopProducts,
   getMyProducts,
+  updateProductStatus,
 };

@@ -9,27 +9,22 @@ import { listMyOrders } from '../actions/orderActions';
 const MyOrderScreen = ({ location, history }) => {
   const dispatch = useDispatch();
 
-  const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails;
-
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
-  const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
-  const { success } = userUpdateProfile;
 
   const orderListMy = useSelector((state) => state.orderListMy);
   const { loading: loadingOrders, error: errorOrders, orders } = orderListMy;
 
+  //check authority. only login user can check their orders
   useEffect(() => {
     if (!userInfo) {
       history.push('/login');
     } else {
-      if (!user || !user.name || success) {
+      if (userInfo) {
         dispatch(listMyOrders());
       }
     }
-  }, [dispatch, history, userInfo, user, success]);
+  }, [dispatch, history, userInfo]);
 
   return (
     <Row>
@@ -44,10 +39,9 @@ const MyOrderScreen = ({ location, history }) => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>DATE</th>
-                <th>TOTAL</th>
-                <th>PAID</th>
-                <th>DELIVERED</th>
+                <th>BOOK</th>
+                <th>ORDER DATE</th>
+                <th>Completed</th>
                 <th></th>
               </tr>
             </thead>
@@ -55,17 +49,11 @@ const MyOrderScreen = ({ location, history }) => {
               {orders.map((order) => (
                 <tr key={order._id}>
                   <td>{order._id}</td>
+                  <td>{order.orderItem.name}</td>
                   <td>{order.createdAt.substring(0, 10)}</td>
-                  <td>{order.totalPrice}</td>
+
                   <td>
-                    {order.isPaid ? (
-                      order.paidAt.substring(0, 10)
-                    ) : (
-                      <i className="fas fa-times" style={{ color: 'red' }}></i>
-                    )}
-                  </td>
-                  <td>
-                    {order.isDelivered ? (
+                    {order.isCompleted ? (
                       order.deliveredAt.substring(0, 10)
                     ) : (
                       <i className="fas fa-times" style={{ color: 'red' }}></i>
@@ -73,7 +61,7 @@ const MyOrderScreen = ({ location, history }) => {
                   </td>
                   <td>
                     <LinkContainer to={`/order/${order._id}`}>
-                      <Button className="btn-sm" variant="light">
+                      <Button className="btn-sm" variant="dark">
                         Details
                       </Button>
                     </LinkContainer>
