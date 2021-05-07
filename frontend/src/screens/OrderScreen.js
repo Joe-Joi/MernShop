@@ -89,7 +89,7 @@ const OrderScreen = ({ match, history }) => {
                   {
                     <ListGroup.Item>
                       <Row>
-                        <Col md={1}>
+                        <Col md={2}>
                           <Image
                             src={order.orderItem.image}
                             alt={order.orderItem.name}

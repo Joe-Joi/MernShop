@@ -41,7 +41,8 @@ export const saveOrderProductInfo = (data) => (dispatch) => {
       name: data.name,
       image: data.image,
       price: data.price,
-      seller: data.seller,
+      seller: data.sellerEmail,
+      status: data.status,
     },
   });
 };
