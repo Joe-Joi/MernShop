@@ -6,6 +6,8 @@ import Order from '../models/orderModel.js';
 // @access  Private
 const addOrderItems = asyncHandler(async (req, res) => {
   const { orderItem, shippingAddress } = req.body;
+  var now = new Date();
+  var expiredDate = now.setDate(now.getDate() + 2);
   if (!orderItem) {
     res.status(400);
     throw new Error('No book requested!');
@@ -15,6 +17,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
       buyer: req.user.email,
       seller: orderItem.seller,
       shippingAddress,
+      expiredAt: expiredDate,
     });
 
     const createdOrder = await order.save();
@@ -41,20 +44,14 @@ const getOrderById = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update order to paid
-// @route   GET /api/orders/:id/pay
+// @route   GET /api/orders/:id/complete
 // @access  Private
-const updateOrderToPaid = asyncHandler(async (req, res) => {
+const updateOrderToCompleted = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
-    order.isPaid = true;
-    order.paidAt = Date.now();
-    order.paymentResult = {
-      id: req.body.id,
-      status: req.body.status,
-      update_time: req.body.update_time,
-      email_address: req.body.payer.email_address,
-    };
+    order.isCompleted = true;
+    order.completedAt = Date.now();
 
     const updatedOrder = await order.save();
 
@@ -66,14 +63,14 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update order to delivered
-// @route   GET /api/orders/:id/deliver
+// @route   GET /api/orders/:id/arrange
 // @access  Private/Admin
-const updateOrderToDelivered = asyncHandler(async (req, res) => {
+const updateOrderToArranged = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
-    order.isDelivered = true;
-    order.deliveredAt = Date.now();
+    order.isArranged = true;
+    order.arrangedAt = Date.now();
 
     const updatedOrder = await order.save();
 
@@ -92,6 +89,14 @@ const getMyOrders = asyncHandler(async (req, res) => {
   res.json(orders);
 });
 
+// @desc    Get logged in user orders
+// @route   GET /api/orders/mysoldorders
+// @access  Private
+const getMySoldOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({ seller: req.user.email });
+  res.json(orders);
+});
+
 // @desc    Get all orders
 // @route   GET /api/orders
 // @access  Private/Admin
@@ -103,8 +108,9 @@ const getOrders = asyncHandler(async (req, res) => {
 export {
   addOrderItems,
   getOrderById,
-  updateOrderToPaid,
-  updateOrderToDelivered,
+  updateOrderToCompleted,
+  updateOrderToArranged,
   getMyOrders,
   getOrders,
+  getMySoldOrders,
 };

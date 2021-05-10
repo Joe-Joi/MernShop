@@ -25,7 +25,10 @@ import {
   USER_UPDATE_SUCCESS,
   USER_UPDATE_REQUEST,
 } from '../constants/userConstants';
-import { ORDER_LIST_MY_RESET } from '../constants/orderConstants';
+import {
+  ORDER_LIST_MY_RESET,
+  ORDER_LIST_MY_SOLD_RESET,
+} from '../constants/orderConstants';
 import { MY_PRODUCT_LIST_RESET } from '../constants/productConstants';
 
 export const login = (email, password) => async (dispatch) => {
@@ -71,6 +74,7 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: ORDER_LIST_MY_RESET });
+  dispatch({ type: ORDER_LIST_MY_SOLD_RESET });
   dispatch({ type: USER_LIST_RESET });
   dispatch({ type: MY_PRODUCT_LIST_RESET });
   document.location.href = '/login';

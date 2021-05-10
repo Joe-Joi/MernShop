@@ -1,19 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Table, Button, Row, Col } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { listMyOrders } from '../actions/orderActions';
+import { listMySoldOrders } from '../actions/orderActions';
 
-const MyOrderScreen = ({ location, history }) => {
+const MySoldOrderScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const orderListMy = useSelector((state) => state.orderListMy);
-  const { loading: loadingOrders, error: errorOrders, orders } = orderListMy;
+  const orderListMySold = useSelector((state) => state.orderListMySold);
+  const {
+    loading: loadingOrders,
+    error: errorOrders,
+    orders,
+  } = orderListMySold;
 
   //check authority. only login user can check their orders
   useEffect(() => {
@@ -21,7 +25,7 @@ const MyOrderScreen = ({ location, history }) => {
       history.push('/login');
     } else {
       if (userInfo) {
-        dispatch(listMyOrders());
+        dispatch(listMySoldOrders());
       }
     }
   }, [dispatch, history, userInfo]);
@@ -29,7 +33,7 @@ const MyOrderScreen = ({ location, history }) => {
   return (
     <Row>
       <Col md={12}>
-        <h2>My Orders</h2>
+        <h2>My Sold</h2>
         {loadingOrders ? (
           <Loader />
         ) : errorOrders ? (
@@ -76,4 +80,4 @@ const MyOrderScreen = ({ location, history }) => {
   );
 };
 
-export default MyOrderScreen;
+export default MySoldOrderScreen;

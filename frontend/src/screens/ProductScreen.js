@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Image, ListGroup, Card, Button } from 'react-bootstrap';
-import Rating from '../components/Rating';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import Meta from '../components/Meta';
@@ -12,7 +11,6 @@ import {
 } from '../actions/productActions';
 import { saveOrderProductInfo } from '../actions/orderActions';
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants';
-import { CART_PRODUCT_INFO } from '../constants/orderConstants';
 
 const ProductScreen = ({ history, match }) => {
   const [rating, setRating] = useState(0);
@@ -75,6 +73,7 @@ const ProductScreen = ({ history, match }) => {
             <Col md={6}>
               <Image src={product.image} alt={product.name} fluid />
             </Col>
+
             <Col md={3}>
               <ListGroup variant="flush">
                 <ListGroup.Item>
@@ -114,16 +113,24 @@ const ProductScreen = ({ history, match }) => {
                     </Button>
                   </ListGroup.Item>
 
-                  <ListGroup.Item>
-                    <Button
-                      onClick={requestBookHandler}
-                      className="btn-block"
-                      type="button"
-                      disabled={product.status !== 'selling'}
-                    >
-                      Request It
-                    </Button>
-                  </ListGroup.Item>
+                  {product.status === 'sold' ? (
+                    <ListGroup.Item>
+                      <Message variant="warning">
+                        This book is sold out!
+                      </Message>
+                    </ListGroup.Item>
+                  ) : (
+                    <ListGroup.Item>
+                      <Button
+                        onClick={requestBookHandler}
+                        className="btn-block"
+                        type="button"
+                        disabled={product.status !== 'selling'}
+                      >
+                        Request It
+                      </Button>
+                    </ListGroup.Item>
+                  )}
                 </ListGroup>
               </Card>
             </Col>

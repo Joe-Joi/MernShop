@@ -38,11 +38,27 @@ const orderSchema = mongoose.Schema(
       dateTime: { type: String, required: true },
       postalCode: { type: String, required: true },
     },
-
+    expiredAt: {
+      type: Date,
+      required: true,
+    },
     isCompleted: {
       type: Boolean,
       required: true,
       default: false,
+    },
+    isArranged: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    isExpired: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    arrangedAt: {
+      type: Date,
     },
     completedAt: {
       type: Date,
