@@ -3,7 +3,9 @@ import express from 'express';
 import dotenv from 'dotenv';
 import colors from 'colors';
 import morgan from 'morgan';
+import schedule from 'node-schedule';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
+import handleExpiredOrders from './middleware/expireMiddleware.js';
 import connectDB from './config/db.js';
 
 import productRoutes from './routes/productRoutes.js';
@@ -14,6 +16,14 @@ import uploadRoutes from './routes/uploadRoutes.js';
 dotenv.config({ path: '../.env' });
 console.log(process.env.MONGO_URI);
 connectDB();
+
+function scanExpiredOreders() {
+  // scan every 30 seconds
+  schedule.scheduleJob('1/30 * * * * *', function () {
+    // console.log('scheduleCronstyle:' + new Date());
+    handleExpiredOrders();
+  });
+}
 
 const app = express();
 
@@ -58,3 +68,5 @@ app.listen(
     `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
   )
 );
+
+scanExpiredOreders();
