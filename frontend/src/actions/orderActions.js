@@ -226,8 +226,7 @@ export const listMyOrders = (startDate = '', endDate = '') => async (
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    // const start = startDate && startDate.toISOString().toString();
-    // const end = endDate && endDate.toISOString().toString();
+
     const { data } = await axios.get(
       `/api/orders/myorders?startDate=${startDate}&endDate=${endDate}`,
       config
