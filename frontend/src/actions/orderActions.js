@@ -251,7 +251,10 @@ export const listMyOrders = (startDate = '', endDate = '') => async (
   }
 };
 
-export const listMySoldOrders = () => async (dispatch, getState) => {
+export const listMySoldOrders = (startDate = '', endDate = '') => async (
+  dispatch,
+  getState
+) => {
   try {
     dispatch({
       type: ORDER_LIST_MY_SOLD_REQUEST,
@@ -267,7 +270,10 @@ export const listMySoldOrders = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/orders/mysoldorders`, config);
+    const { data } = await axios.get(
+      `/api/orders/mysoldorders?startDate=${startDate}&endDate=${endDate}`,
+      config
+    );
 
     dispatch({
       type: ORDER_LIST_MY_SOLD_SUCCESS,

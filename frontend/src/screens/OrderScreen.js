@@ -56,8 +56,8 @@ const OrderScreen = ({ match, history }) => {
       dispatch(getOrderDetails(orderId));
     } else if (
       //if the current is neither seller or buyer, redirect to homepage
-      userInfo.email != order.seller &&
-      userInfo.email != order.buyer
+      userInfo.email !== order.seller &&
+      userInfo.email !== order.buyer
     ) {
       history.push('/');
     }
@@ -175,7 +175,7 @@ const OrderScreen = ({ match, history }) => {
 
               {loadingArrange && <Loader />}
               {userInfo &&
-                userInfo.email == order.seller &&
+                userInfo.email === order.seller &&
                 !order.isArranged &&
                 !order.isExpired && (
                   <ListGroup.Item>
@@ -190,7 +190,7 @@ const OrderScreen = ({ match, history }) => {
                 )}
               {loadingComplete && <Loader />}
               {userInfo &&
-                userInfo.email == order.seller &&
+                userInfo.email === order.seller &&
                 order.isArranged &&
                 !order.isCompleted &&
                 !order.isExpired && (

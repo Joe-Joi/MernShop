@@ -112,7 +112,26 @@ const getMyOrders = asyncHandler(async (req, res) => {
 // @route   GET /api/orders/mysoldorders
 // @access  Private
 const getMySoldOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ seller: req.user.email });
+  const start = req.query.startDate;
+  const end = req.query.endDate;
+  var queryKeys = { buyer: req.user.email };
+  var dateKeys = { createdAt: {} };
+  //build Mongo query filter
+  if (start !== '' && start !== 'null') {
+    dateKeys['createdAt']['$gt'] = start;
+  }
+  if (end !== '' && end !== 'null') {
+    dateKeys['createdAt']['$lt'] = end;
+  }
+  if (Object.keys(dateKeys['createdAt']).length === 0) {
+    queryKeys = { seller: req.user.email };
+  } else {
+    queryKeys = { ...{ seller: req.user.email }, ...dateKeys };
+  }
+  const orders = await Order.find({
+    ...queryKeys,
+  });
+
   res.json(orders);
 });
 

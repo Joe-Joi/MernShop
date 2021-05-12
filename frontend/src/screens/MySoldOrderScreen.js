@@ -1,17 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Button, Row, Col, Alert } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { listMySoldOrders } from '../actions/orderActions';
+import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from 'react-datepicker';
 
 const MySoldOrderScreen = ({ history }) => {
   const dispatch = useDispatch();
 
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-
   const orderListMySold = useSelector((state) => state.orderListMySold);
   const {
     loading: loadingOrders,
@@ -29,11 +32,34 @@ const MySoldOrderScreen = ({ history }) => {
       }
     }
   }, [dispatch, history, userInfo]);
-
+  const soldDateHandler = () => {
+    dispatch(listMySoldOrders(startDate, endDate));
+  };
   return (
     <Row>
       <Col md={12}>
         <h2>MY SOLD BOOKS</h2>
+        <Row>
+          Choose Order Date:<span>&nbsp;&nbsp;</span>
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+          />
+          <span>&nbsp;&nbsp;</span>
+          To<span>&nbsp;&nbsp;</span>
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+          />
+          <span>&nbsp;&nbsp;</span>
+          <Button
+            className="btn-sm"
+            variant="outline-dark"
+            onClick={soldDateHandler}
+          >
+            Search
+          </Button>
+        </Row>
         {loadingOrders ? (
           <Loader />
         ) : errorOrders ? (

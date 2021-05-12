@@ -96,7 +96,7 @@ const PlaceOrderScreen = ({ history }) => {
             <ListGroup.Item>
               <Button
                 type="button"
-                disabled={!product || product.status != 'selling'}
+                disabled={!product || product.status !== 'selling'}
                 onClick={placeOrderHandler}
               >
                 Place Order
