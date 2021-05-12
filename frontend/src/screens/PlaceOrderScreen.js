@@ -75,7 +75,7 @@ const PlaceOrderScreen = ({ history }) => {
                           />
                         </Col>
                         <Col>
-                          <Link to={`/product/${product._id}`}>
+                          <Link to={`/product/${product.product}`}>
                             {product.name}
                           </Link>
                         </Col>

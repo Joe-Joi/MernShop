@@ -61,12 +61,15 @@ const MyProductScreen = ({ history, match }) => {
       dispatch(deleteProduct(id));
     }
   };
+  const editHandler = (product) => {
+    history.push(`/product/edit/${product._id}`);
+  };
 
   return (
     <>
       <Row className="align-items-center">
         <Col>
-          <h1>MY BOOKS</h1>
+          <h1>MY SELLING BOOKS</h1>
         </Col>
         <Col className="text-right">
           <LinkContainer to={'/newproduct'}>
@@ -108,11 +111,13 @@ const MyProductScreen = ({ history, match }) => {
                   <td>{product.category}</td>
                   <td>{product.condition}</td>
                   <td>
-                    <LinkContainer to={`/product/edit/${product._id}`}>
-                      <Button variant="light" className="btn-sm">
-                        <i className="fas fa-edit"></i>
-                      </Button>
-                    </LinkContainer>
+                    <Button
+                      variant="light"
+                      className="btn-sm"
+                      onClick={() => editHandler(product)}
+                    >
+                      <i className="fas fa-edit"></i>
+                    </Button>
                     <Button
                       variant="danger"
                       className="btn-sm"

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Table, Button, Row, Col } from 'react-bootstrap';
+import { Table, Button, Row, Col, Alert } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
@@ -33,7 +33,7 @@ const MySoldOrderScreen = ({ history }) => {
   return (
     <Row>
       <Col md={12}>
-        <h2>My Sold</h2>
+        <h2>MY SOLD BOOKS</h2>
         {loadingOrders ? (
           <Loader />
         ) : errorOrders ? (
@@ -42,10 +42,11 @@ const MySoldOrderScreen = ({ history }) => {
           <Table striped bordered hover responsive className="table-sm">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>ORDER ID</th>
                 <th>BOOK</th>
+                <th>BUYER</th>
                 <th>ORDER DATE</th>
-                <th>Completed</th>
+                <th>Status</th>
                 <th></th>
               </tr>
             </thead>
@@ -53,20 +54,31 @@ const MySoldOrderScreen = ({ history }) => {
               {orders.map((order) => (
                 <tr key={order._id}>
                   <td>{order._id}</td>
-                  <td>{order.orderItem.name}</td>
+                  <td>
+                    <LinkContainer to={`/product/${order.orderItem.product}`}>
+                      <Alert.Link className="md" variant="light">
+                        {order.orderItem.name}
+                      </Alert.Link>
+                    </LinkContainer>
+                  </td>
+                  <td>{order.buyer}</td>
                   <td>{order.createdAt.substring(0, 10)}</td>
 
                   <td>
                     {order.isCompleted ? (
-                      order.completedAt.substring(0, 10)
+                      <p class="text-success">Completed</p>
+                    ) : order.isExpired ? (
+                      <p class="text-danger">Expired</p>
+                    ) : order.isArranged ? (
+                      <p class="text-info">Arranged</p>
                     ) : (
-                      <i className="fas fa-times" style={{ color: 'red' }}></i>
+                      <p class="text-warning">Waitting Arrangement</p>
                     )}
                   </td>
                   <td>
                     <LinkContainer to={`/order/${order._id}`}>
                       <Button className="btn-sm" variant="dark">
-                        Details
+                        ORDER DETAIL
                       </Button>
                     </LinkContainer>
                   </td>

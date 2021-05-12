@@ -208,7 +208,10 @@ export const arrangeOrder = (order) => async (dispatch, getState) => {
   }
 };
 
-export const listMyOrders = () => async (dispatch, getState) => {
+export const listMyOrders = (startDate = '', endDate = '') => async (
+  dispatch,
+  getState
+) => {
   try {
     dispatch({
       type: ORDER_LIST_MY_REQUEST,
@@ -223,8 +226,12 @@ export const listMyOrders = () => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-
-    const { data } = await axios.get(`/api/orders/myorders`, config);
+    // const start = startDate && startDate.toISOString().toString();
+    // const end = endDate && endDate.toISOString().toString();
+    const { data } = await axios.get(
+      `/api/orders/myorders?startDate=${startDate}&endDate=${endDate}`,
+      config
+    );
 
     dispatch({
       type: ORDER_LIST_MY_SUCCESS,

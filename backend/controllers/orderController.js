@@ -85,7 +85,17 @@ const updateOrderToArranged = asyncHandler(async (req, res) => {
 // @route   GET /api/orders/myorders
 // @access  Private
 const getMyOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ buyer: req.user.email });
+  console.info(req.query.startDate === null);
+  console.info(req.query.startDate === '');
+  console.info(req.query.startDate === undefined);
+  const start = req.query.startDate;
+  const end = req.query.endDate;
+  var queryKeys = { buyer: req.user.email };
+  if (start && end) {
+    queryKeys = { buyer: req.user.email, createdAt: { $gt: start, $lt: end } };
+  }
+  console.log(queryKeys);
+  const orders = await Order.find({ ...queryKeys });
   res.json(orders);
 });
 

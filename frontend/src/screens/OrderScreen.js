@@ -91,23 +91,30 @@ const OrderScreen = ({ match, history }) => {
                 <strong>Time&Date:</strong>
                 {order.shippingAddress.dateTime}{' '}
               </p>
-              {order.isArranged ? (
-                order.isCompleted ? (
-                  <Message variant="success">
-                    Book has been exchanged, order is completed!
-                  </Message>
+              {!order.isExpired ? (
+                order.isArranged ? (
+                  order.isCompleted ? (
+                    <Message variant="success">
+                      Book has been exchanged, order is completed!
+                    </Message>
+                  ) : (
+                    <Message variant="success">
+                      Order is arranged, waitting for exchange!
+                    </Message>
+                  )
                 ) : (
-                  <Message variant="success">
-                    Order is arranged, waitting for exchange!
+                  <Message variant="warning">
+                    Waitting for Arrangement;
+                    <p>
+                      If the order is not arranged before{' '}
+                      {formDate(order.expiredAt)}, the order will expire.
+                    </p>
                   </Message>
                 )
               ) : (
-                <Message variant="warning">
-                  Waitting for Arrangement;
-                  <p>
-                    If the order is not arranged before{' '}
-                    {formDate(order.expiredAt)}, the order will expire.
-                  </p>
+                <Message variant="danger">
+                  Exchange failed, this order expired at{' '}
+                  {formDate(order.expiredAt)}!
                 </Message>
               )}
             </ListGroup.Item>
@@ -134,7 +141,7 @@ const OrderScreen = ({ match, history }) => {
                             {order.orderItem.name}
                           </Link>
                         </Col>
-                        <Col md={4}>{order.orderItem.price}</Col>
+                        <Col md={4}>${order.orderItem.price}</Col>
                       </Row>
                     </ListGroup.Item>
                   }
@@ -167,21 +174,26 @@ const OrderScreen = ({ match, history }) => {
               </ListGroup.Item>
 
               {loadingArrange && <Loader />}
-              {userInfo && userInfo.email == order.seller && !order.isArranged && (
-                <ListGroup.Item>
-                  <Button
-                    type="button"
-                    className="btn btn-block"
-                    onClick={arrangeHandler}
-                  >
-                    Mark As Arranged
-                  </Button>
-                </ListGroup.Item>
-              )}
+              {userInfo &&
+                userInfo.email == order.seller &&
+                !order.isArranged &&
+                !order.isExpired && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={arrangeHandler}
+                    >
+                      Mark As Arranged
+                    </Button>
+                  </ListGroup.Item>
+                )}
               {loadingComplete && <Loader />}
               {userInfo &&
                 userInfo.email == order.seller &&
-                !order.isCompleted && (
+                order.isArranged &&
+                !order.isCompleted &&
+                !order.isExpired && (
                   <ListGroup.Item>
                     <Button
                       type="button"

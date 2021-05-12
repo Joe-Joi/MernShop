@@ -51,6 +51,10 @@ const ProductEditScreen = ({ match, history }) => {
         setDescription(product.description);
         setAuthor(product.author);
         setCondition(product.condition);
+        if (product.status != 'selling') {
+          window.alert("This book is not on sale, can't edit! ", product);
+          history.push('/myproducts');
+        }
       }
     }
   }, [dispatch, history, productId, product, successUpdate]);

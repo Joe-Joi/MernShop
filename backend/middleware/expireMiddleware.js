@@ -23,7 +23,7 @@ const handleExpiredOrders = async () => {
         );
       });
     })
-    .then(() => session.endSession());
+    .catch(() => session.endSession());
 };
 
 export default handleExpiredOrders;

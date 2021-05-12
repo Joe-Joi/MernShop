@@ -44,7 +44,10 @@ const ProductScreen = ({ history, match }) => {
 
   const requestBookHandler = () => {
     dispatch(saveOrderProductInfo(product));
-    history.push(`/shipping`);
+    history.push('/login?redirect=shipping');
+  };
+  const productManageHandler = () => {
+    history.push(`/product/edit/${product._id}`);
   };
 
   const submitHandler = (e) => {
@@ -106,29 +109,44 @@ const ProductScreen = ({ history, match }) => {
                       </Col>
                     </Row>
                   </ListGroup.Item>
+                  {!userInfo || userInfo.email !== product.sellerEmail ? (
+                    <>
+                      <ListGroup.Item>
+                        <Button
+                          className="btn-block"
+                          type="button"
+                          disabled={true}
+                        >
+                          Contact the Seller
+                        </Button>
+                      </ListGroup.Item>
 
-                  <ListGroup.Item>
-                    <Button className="btn-block" type="button" disabled={true}>
-                      Contact the Seller
-                    </Button>
-                  </ListGroup.Item>
-
-                  {product.status === 'sold' ? (
-                    <ListGroup.Item>
-                      <Message variant="warning">
-                        This book is sold out!
-                      </Message>
-                    </ListGroup.Item>
+                      <ListGroup.Item>
+                        <Button
+                          onClick={requestBookHandler}
+                          className="btn-block"
+                          type="button"
+                          disabled={product.status !== 'selling'}
+                        >
+                          Request It
+                        </Button>
+                      </ListGroup.Item>
+                    </>
                   ) : (
                     <ListGroup.Item>
                       <Button
-                        onClick={requestBookHandler}
+                        onClick={productManageHandler}
                         className="btn-block"
                         type="button"
                         disabled={product.status !== 'selling'}
                       >
-                        Request It
+                        Manage This Book
                       </Button>
+                    </ListGroup.Item>
+                  )}
+                  {product.status === 'sold' && (
+                    <ListGroup.Item>
+                      <Message variant="warning">This book is sold!</Message>
                     </ListGroup.Item>
                   )}
                 </ListGroup>
