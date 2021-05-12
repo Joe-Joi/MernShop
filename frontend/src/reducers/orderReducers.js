@@ -27,6 +27,10 @@ import {
   ORDER_LIST_MY_SOLD_SUCCESS,
   ORDER_LIST_MY_SOLD_FAIL,
   ORDER_LIST_MY_SOLD_RESET,
+  ORDER_CREATE_REVIEW_REQUEST,
+  ORDER_CREATE_REVIEW_SUCCESS,
+  ORDER_CREATE_REVIEW_FAIL,
+  ORDER_CREATE_REVIEW_RESET,
 } from '../constants/orderConstants';
 
 export const orderInfoReducer = (state = { shippingAddress: {} }, action) => {
@@ -201,6 +205,21 @@ export const orderListReducer = (state = { orders: [] }, action) => {
         loading: false,
         error: action.payload,
       };
+    default:
+      return state;
+  }
+};
+
+export const orderReviewCreateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ORDER_CREATE_REVIEW_REQUEST:
+      return { loading: true };
+    case ORDER_CREATE_REVIEW_SUCCESS:
+      return { loading: false, success: true };
+    case ORDER_CREATE_REVIEW_FAIL:
+      return { loading: false, error: action.payload };
+    case ORDER_CREATE_REVIEW_RESET:
+      return {};
     default:
       return state;
   }

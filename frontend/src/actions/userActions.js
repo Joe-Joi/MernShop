@@ -24,6 +24,9 @@ import {
   USER_UPDATE_FAIL,
   USER_UPDATE_SUCCESS,
   USER_UPDATE_REQUEST,
+  USER_LIST_REVIEWS_REQUEST,
+  USER_LIST_REVIEWS_SUCCESS,
+  USER_LIST_REVIEWS_FAIL,
 } from '../constants/userConstants';
 import {
   ORDER_LIST_MY_RESET,
@@ -120,7 +123,7 @@ export const register = (name, email, password) => async (dispatch) => {
   }
 };
 
-export const getUserDetails = (id) => async (dispatch, getState) => {
+export const getUserDetails = (email) => async (dispatch, getState) => {
   try {
     dispatch({
       type: USER_DETAILS_REQUEST,
@@ -136,7 +139,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/users/${id}`, config);
+    const { data } = await axios.get(`/api/users/profile/${email}`, config);
 
     dispatch({
       type: USER_DETAILS_SUCCESS,
@@ -152,6 +155,43 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
     }
     dispatch({
       type: USER_DETAILS_FAIL,
+      payload: message,
+    });
+  }
+};
+
+export const listReviews = (email) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_LIST_REVIEWS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(
+      `/api/users/profile/reviews/${email}`,
+      config
+    );
+
+    dispatch({
+      type: USER_LIST_REVIEWS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({
+      type: USER_LIST_REVIEWS_FAIL,
       payload: message,
     });
   }
@@ -174,7 +214,11 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.put(`/api/users/profile`, user, config);
+    const { data } = await axios.put(
+      `/api/users/profile/${user.id}`,
+      user,
+      config
+    );
 
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,

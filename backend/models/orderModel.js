@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const reviewSchema = mongoose.Schema(
+export const reviewSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
     rating: { type: Number, required: true },
@@ -32,7 +32,7 @@ const orderSchema = mongoose.Schema(
       },
     },
 
-    reviews: [reviewSchema],
+    review: { type: reviewSchema, default: null },
     shippingAddress: {
       address: { type: String, required: true },
       dateTime: { type: String, required: true },

@@ -20,12 +20,15 @@ import {
   ORDER_ARRANGE_REQUEST,
   CART_SAVE_SHIPPING_ADDRESS,
   ORDER_PRODUCT_INFO,
+  ORDER_CREATE_REVIEW_REQUEST,
+  ORDER_CREATE_REVIEW_SUCCESS,
+  ORDER_CREATE_REVIEW_FAIL,
   ORDER_LIST_MY_SOLD_REQUEST,
-  ORDER_LIST_MY_SOLD_SUCCESS,
   ORDER_LIST_MY_SOLD_FAIL,
+  ORDER_LIST_MY_SOLD_SUCCESS,
 } from '../constants/orderConstants';
 import { logout } from './userActions';
-import { updateProduct, updateProductStatus } from './productActions';
+import { updateProductStatus } from './productActions';
 
 export const saveShippingAddress = (data) => (dispatch) => {
   dispatch({
@@ -326,6 +329,46 @@ export const listOrders = () => async (dispatch, getState) => {
     }
     dispatch({
       type: ORDER_LIST_FAIL,
+      payload: message,
+    });
+  }
+};
+
+export const createOrderReview = (orderId, review) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: ORDER_CREATE_REVIEW_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    await axios.post(`/api/orders/${orderId}/reviews`, review, config);
+
+    dispatch({
+      type: ORDER_CREATE_REVIEW_SUCCESS,
+    });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
+    dispatch({
+      type: ORDER_CREATE_REVIEW_FAIL,
       payload: message,
     });
   }

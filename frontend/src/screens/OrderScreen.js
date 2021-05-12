@@ -1,17 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, ListGroup, Image, Card, Button } from 'react-bootstrap';
+import {
+  Row,
+  Col,
+  Image,
+  ListGroup,
+  Card,
+  Button,
+  Form,
+  Alert,
+} from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import Rating from '../components/Rating';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
+import Meta from '../components/Meta';
 import {
   getOrderDetails,
   completeOrder,
   arrangeOrder,
+  createOrderReview,
 } from '../actions/orderActions';
 import {
   ORDER_ARRANGE_RESET,
   ORDER_COMPLETE_RESET,
+  ORDER_CREATE_REVIEW_RESET,
 } from '../constants/orderConstants';
 
 // format ISO date to readable format
@@ -35,7 +49,8 @@ const OrderScreen = ({ match, history }) => {
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
-
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
   const orderComplete = useSelector((state) => state.orderComplete);
   const { loading: loadingComplete, success: successComplete } = orderComplete;
 
@@ -45,15 +60,29 @@ const OrderScreen = ({ match, history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const orderReviewCreate = useSelector((state) => state.orderReviewCreate);
+  const {
+    success: successOrderReview,
+    loading: loadingOrderReview,
+    error: errorProductReview,
+  } = orderReviewCreate;
+
   useEffect(() => {
     if (!userInfo) {
       history.push('/login');
     }
 
-    if (!order || successComplete || successArrange || order._id !== orderId) {
+    if (
+      !order ||
+      successComplete ||
+      successArrange ||
+      order._id !== orderId ||
+      successOrderReview
+    ) {
+      dispatch(getOrderDetails(orderId));
       dispatch({ type: ORDER_ARRANGE_RESET });
       dispatch({ type: ORDER_COMPLETE_RESET });
-      dispatch(getOrderDetails(orderId));
+      dispatch({ type: ORDER_CREATE_REVIEW_RESET });
     } else if (
       //if the current is neither seller or buyer, redirect to homepage
       userInfo.email !== order.seller &&
@@ -61,13 +90,30 @@ const OrderScreen = ({ match, history }) => {
     ) {
       history.push('/');
     }
-  }, [dispatch, orderId, successArrange, successComplete, order]);
+  }, [
+    dispatch,
+    orderId,
+    successArrange,
+    successComplete,
+    order,
+    match,
+    successOrderReview,
+  ]);
 
   const arrangeHandler = () => {
     dispatch(arrangeOrder(order));
   };
   const completeHandler = () => {
     dispatch(completeOrder(order));
+  };
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(
+      createOrderReview(match.params.id, {
+        rating,
+        comment,
+      })
+    );
   };
 
   return loading ? (
@@ -148,8 +194,75 @@ const OrderScreen = ({ match, history }) => {
                 </ListGroup>
               )}
             </ListGroup.Item>
+            {/*only completed order can be reviwed by buyer*/}
+            {order.isCompleted === true && (
+              <ListGroup.Item variant="flush">
+                <h2>Review</h2>
+
+                {!order.review ? (
+                  <Message>No review yet!</Message>
+                ) : (
+                  <ListGroup.Item key={order.review._id}>
+                    <strong>{order.review.name}</strong>
+                    <Rating value={order.review.rating} />
+                    <p>{order.review.createdAt.substring(0, 10)}</p>
+                    <p>{order.review.comment}</p>
+                  </ListGroup.Item>
+                )}
+
+                {!order.review && userInfo.email === order.buyer && (
+                  <ListGroup.Item variant="flush">
+                    <h2>Write Your Review here</h2>
+                    {successOrderReview && (
+                      <Message variant="success">
+                        Review submitted successfully
+                      </Message>
+                    )}
+                    {loadingOrderReview && <Loader />}
+                    {errorProductReview && (
+                      <Message variant="danger">{errorProductReview}</Message>
+                    )}
+
+                    <Form onSubmit={submitHandler}>
+                      <Form.Group controlId="rating">
+                        <Form.Label>Rating</Form.Label>
+                        <Form.Control
+                          as="select"
+                          value={rating}
+                          onChange={(e) => setRating(e.target.value)}
+                        >
+                          <option value="">Select...</option>
+                          <option value="1">1 - Poor</option>
+                          <option value="2">2 - Fair</option>
+                          <option value="3">3 - Good</option>
+                          <option value="4">4 - Very Good</option>
+                          <option value="5">5 - Excellent</option>
+                        </Form.Control>
+                      </Form.Group>
+                      <Form.Group controlId="comment">
+                        <Form.Label>Comment</Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          row="3"
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                        ></Form.Control>
+                      </Form.Group>
+                      <Button
+                        disabled={loadingOrderReview}
+                        type="submit"
+                        variant="primary"
+                      >
+                        Submit
+                      </Button>
+                    </Form>
+                  </ListGroup.Item>
+                )}
+              </ListGroup.Item>
+            )}
           </ListGroup>
         </Col>
+
         <Col md={4}>
           <Card>
             <ListGroup variant="flush">
@@ -159,16 +272,24 @@ const OrderScreen = ({ match, history }) => {
               <ListGroup.Item>
                 <Row>
                   <Col>Buyer</Col>
-                  <Col>{order.buyer}</Col>
+                  <Col>
+                    <LinkContainer to={`/profile/${order.buyer}`}>
+                      <Alert.Link className="md" variant="light">
+                        {order.buyer}
+                      </Alert.Link>
+                    </LinkContainer>
+                  </Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Seller</Col>
                   <Col>
-                    <a href={`mailto:${order.buyer}`}>
-                      {order.orderItem.seller}
-                    </a>
+                    <LinkContainer to={`/profile/${order.orderItem.seller}`}>
+                      <Alert.Link className="md" variant="light">
+                        {order.orderItem.seller}
+                      </Alert.Link>
+                    </LinkContainer>
                   </Col>
                 </Row>
               </ListGroup.Item>

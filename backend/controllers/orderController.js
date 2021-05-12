@@ -108,8 +108,47 @@ const getMyOrders = asyncHandler(async (req, res) => {
   res.json(orders);
 });
 
+// @desc    Get all orders
+// @route   GET /api/orders
+// @access  Private/Admin
+const getOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({}).populate('user', 'id name');
+  res.json(orders);
+});
+
+// @desc    Create new review to order and the seller as well
+// @route   POST /api/orders/:id/reviews
+// @access  Private
+const createOrderReview = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+
+  const order = await Order.findById(req.params.id);
+  console.log(req.user);
+  if (order) {
+    if (order.review) {
+      res.status(400);
+      throw new Error('This order already reviewed');
+    }
+
+    const review = {
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+      user: req.user._id,
+    };
+
+    order.review = review;
+
+    await order.save();
+    res.status(201).json({ message: 'Review added' });
+  } else {
+    res.status(404);
+    throw new Error('Order or Seller not found');
+  }
+});
+
 // @desc    Get logged in user orders
-// @route   GET /api/orders/mysoldorders
+// @route   GET /api/orders/reviews/:id
 // @access  Private
 const getMySoldOrders = asyncHandler(async (req, res) => {
   const start = req.query.startDate;
@@ -135,14 +174,6 @@ const getMySoldOrders = asyncHandler(async (req, res) => {
   res.json(orders);
 });
 
-// @desc    Get all orders
-// @route   GET /api/orders
-// @access  Private/Admin
-const getOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({}).populate('user', 'id name');
-  res.json(orders);
-});
-
 export {
   addOrderItems,
   getOrderById,
@@ -151,4 +182,5 @@ export {
   getMyOrders,
   getOrders,
   getMySoldOrders,
+  createOrderReview,
 };
