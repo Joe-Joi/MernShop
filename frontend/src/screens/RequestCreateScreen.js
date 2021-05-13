@@ -165,7 +165,7 @@ const RequestCreateScreen = ({ history }) => {
             </Form.Group>
 
             <Button type="submit" variant="primary">
-              SELL
+              REQUEST
             </Button>
           </Form>
         )}
