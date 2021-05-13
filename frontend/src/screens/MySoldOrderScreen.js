@@ -8,11 +8,25 @@ import { listMySoldOrders } from '../actions/orderActions';
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker';
 
+// format ISO date to readable format
+function formDate(dateForm) {
+  if (dateForm === '') {
+    return '';
+  } else {
+    var dateee = new Date(dateForm).toJSON();
+    var date = new Date(+new Date(dateee))
+      .toISOString()
+      .replace(/T/g, ' ')
+      .replace(/\.[\d]{3}Z/, '');
+    return date;
+  }
+}
+
 const MySoldOrderScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const orderListMySold = useSelector((state) => state.orderListMySold);
@@ -42,12 +56,14 @@ const MySoldOrderScreen = ({ history }) => {
         <Row>
           Choose Order Date:<span>&nbsp;&nbsp;</span>
           <DatePicker
+            showTimeSelect
             selected={startDate}
             onChange={(date) => setStartDate(date)}
           />
           <span>&nbsp;&nbsp;</span>
           To<span>&nbsp;&nbsp;</span>
           <DatePicker
+            showTimeSelect
             selected={endDate}
             onChange={(date) => setEndDate(date)}
           />
@@ -88,7 +104,7 @@ const MySoldOrderScreen = ({ history }) => {
                     </LinkContainer>
                   </td>
                   <td>{order.buyer}</td>
-                  <td>{order.createdAt.substring(0, 10)}</td>
+                  <td>{formDate(order.createdAt)}</td>
 
                   <td>
                     {order.isCompleted ? (

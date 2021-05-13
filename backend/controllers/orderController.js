@@ -90,11 +90,12 @@ const getMyOrders = asyncHandler(async (req, res) => {
   var queryKeys = { buyer: req.user.email };
   var dateKeys = { createdAt: {} };
   //build Mongo query filter
+
   if (start !== '' && start !== 'null') {
-    dateKeys['createdAt']['$gt'] = start;
+    dateKeys['createdAt']['$gte'] = start;
   }
   if (end !== '' && end !== 'null') {
-    dateKeys['createdAt']['$lt'] = end;
+    dateKeys['createdAt']['$lte'] = end;
   }
   if (Object.keys(dateKeys['createdAt']).length === 0) {
     queryKeys = { buyer: req.user.email };
@@ -157,10 +158,10 @@ const getMySoldOrders = asyncHandler(async (req, res) => {
   var dateKeys = { createdAt: {} };
   //build Mongo query filter
   if (start !== '' && start !== 'null') {
-    dateKeys['createdAt']['$gt'] = start;
+    dateKeys['createdAt']['$gte'] = start;
   }
   if (end !== '' && end !== 'null') {
-    dateKeys['createdAt']['$lt'] = end;
+    dateKeys['createdAt']['$lte'] = end;
   }
   if (Object.keys(dateKeys['createdAt']).length === 0) {
     queryKeys = { seller: req.user.email };
