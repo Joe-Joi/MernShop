@@ -3,11 +3,12 @@ import { Form, Button } from 'react-bootstrap'
 
 const SearchBox = ({ history }) => {
   const [keyword, setKeyword] = useState('')
-
+  //const [prefix, setPrefix] = useState('')
   const submitHandler = (e) => {
     e.preventDefault()
+    var prefix = document.getElementById("prefix").value
     if (keyword.trim()) {
-      history.push(`/search/${keyword}`)
+      history.push(`/search/${prefix+'_'+keyword}`)
     } else {
       history.push('/')
     }
@@ -15,6 +16,11 @@ const SearchBox = ({ history }) => {
 
   return (
     <Form onSubmit={submitHandler} inline>
+      <Form.Control as='select' id='prefix'>
+        <option>title</option>
+        <option>author</option>
+        <option>category</option>
+      </Form.Control>
       <Form.Control
         type='text'
         name='q'

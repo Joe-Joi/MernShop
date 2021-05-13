@@ -9,13 +9,17 @@ import { ORDER_CREATE_RESET } from '../constants/orderConstants';
 import { USER_DETAILS_RESET } from '../constants/userConstants';
 import { PRODUCT_DETAILS_RESET } from '../constants/productConstants';
 
+import axios from 'axios';
 const PlaceOrderScreen = ({ history }) => {
   const dispatch = useDispatch();
   //include info about the prodcut and Address&Time
   const { error, success, order } = useSelector((state) => state.orderCreate);
 
   const { shippingAddress, product } = useSelector((state) => state.orderInfo);
-
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const userGlobalSocket = useSelector((state) => state.userGlobalSocket);
+  const { userSocket } = userGlobalSocket;
   if (!shippingAddress.address) {
     history.push('/shipping');
   }
@@ -31,7 +35,64 @@ const PlaceOrderScreen = ({ history }) => {
     }
   }, [history, success]);
 
-  const placeOrderHandler = () => {
+  const placeOrderHandler = async () => {
+    if (!userInfo) {
+      history.push('/login');
+    }
+    const product_id = product.product;
+    console.log('product_id' + product_id);
+    console.log(product.seller);
+    var { data } = await axios.get(`/api/users/getUserInfo/${product.seller}`);
+    console.log('data:' + JSON.stringify(data));
+    const seller_id = data._id;
+    //console.log(JSON.stringify(seller))
+    const buyer_id = userInfo._id;
+    console.log(buyer_id + '     ' + seller_id);
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    var chat = await axios.post(
+      '/api/chatlist/chat/',
+      { product_id, seller_id, buyer_id },
+      config
+    );
+    chat = chat.data;
+    console.log(JSON.stringify(chat));
+    if (chat != 'none') {
+      console.log('notify the seller that I have bought');
+      let message = {
+        srcUser: buyer_id,
+        destUser: seller_id,
+        msgContent: 'I have bought your book~',
+        msgTime: Date.now(),
+      };
+
+      userSocket.emit('private-message', chat._id, message);
+      //history.push('/chatlist')
+    } else {
+      console.log('new notify the seller that I have bought');
+      console.log(buyer_id + '     ' + seller_id);
+      let newchat = {
+        productId: product_id,
+        sellerId: seller_id,
+        buyerId: buyer_id,
+        unread: true,
+        messages: [
+          {
+            srcUser: buyer_id,
+            destUser: seller_id,
+            msgContent: 'I have bought your book~',
+            msgTime: Date.now(),
+          },
+        ],
+      };
+
+      await userSocket.emit('createNewChat', newchat);
+      //history.push('/chatlist')
+    }
     dispatch(
       createOrder({
         orderItem: product,

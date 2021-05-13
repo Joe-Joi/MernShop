@@ -29,12 +29,24 @@ import {
   USER_LIST_REVIEWS_SUCCESS,
   USER_LIST_REVIEWS_REQUEST,
   USER_LIST_REVIEWS_RESET,
+  USER_SOCKET_CREATE,
 } from '../constants/userConstants';
+
+export const userSocketReducer = (state = { userSocket: null }, action) => {
+  switch (action.type) {
+    case USER_SOCKET_CREATE:
+      return { userSocket: action.socket };
+    default:
+      return state;
+  }
+};
 
 export const userLoginReducer = (state = {}, action) => {
   switch (action.type) {
     case USER_LOGIN_REQUEST:
       return { loading: true };
+    case USER_LOGIN_SUCCESS:
+      return { loading: false, userInfo: action.payload };
     case USER_LOGIN_SUCCESS:
       return { loading: false, userInfo: action.payload };
     case USER_LOGIN_FAIL:

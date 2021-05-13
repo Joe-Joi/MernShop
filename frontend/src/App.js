@@ -24,12 +24,14 @@ import MySoldOrderScreen from './screens/MySoldOrderScreen';
 import RequestingScreen from './screens/RequestingScreen';
 import RequestCreateScreen from './screens/RequestCreateScreen';
 
+import ChatListScreen from './screens/ChatListScreen';
 const App = () => {
   return (
     <Router>
       <Header />
       <main className="py-3">
         <Container>
+          <Route path="/chatlist" component={ChatListScreen} />
           <Route path="/order/:id" component={OrderScreen} />
           <Route path="/shipping" component={ShippingScreen} />
           <Route path="/placeorder" component={PlaceOrderScreen} />
