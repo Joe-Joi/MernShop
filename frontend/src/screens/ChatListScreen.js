@@ -43,7 +43,7 @@ const ChatListScreen = ({ history }) => {
       console.log(userInfo._id)
       dispatch(getChatList(userInfo._id))
       dispatch(setSelectedChat(0))
-      if(!userSocket){
+      if(!userSocket.connected){
         history.push('/logout')
         history.push('/login')
       }
@@ -105,9 +105,17 @@ const ChatListScreen = ({ history }) => {
       msgContent:messageContent,
       msgTime:Date.now(),
     }
+
+    let message2server = {
+      srcUser:userInfo._id,
+      destUser:dest._id,
+      msgContent:messageContent,
+      msgTime:Date.now(),
+    }
     if(!userSocket.connected){
       console.log('!!!!!')
     }
+    
     userSocket.emit("private-message",chat._id,message)
     chat.messages.push(message)
     for(var item in chatlist){

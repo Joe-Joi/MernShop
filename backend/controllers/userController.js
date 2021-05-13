@@ -177,8 +177,9 @@ const getUserByEmail = asyncHandler(async (req,res)=>{
       isAdmin: user.isAdmin,
     })
   } else {
-    res.status(401)
-    throw new Error('Invalid email')
+    res.json('first-time')
+    //res.status(401)
+    //throw new Error('Invalid email')
   }
 })
 
