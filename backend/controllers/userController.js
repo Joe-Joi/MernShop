@@ -30,7 +30,9 @@ const authUser = asyncHandler(async (req, res) => {
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-
+  if (!email.match(/^[A-Za-z0-9]+([_\.][A-Za-z0-9]+)*@soton\.ac\.uk$/)) {
+    throw new Error('Only University of Southampton Email Allowed!');
+  }
   const userExists = await User.findOne({ email });
 
   if (userExists) {
