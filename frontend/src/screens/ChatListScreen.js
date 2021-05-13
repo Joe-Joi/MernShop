@@ -170,7 +170,7 @@ const ChatListScreen = ({ history }) => {
                         <>
                           <ListGroup.Item>
                             <Row>
-                              From {message.srcUser.name}, at {message.msgTime}
+                              From {message.srcUser.name}, at {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(message.msgTime)}
                             </Row>
                             <Row> {message.msgContent}</Row>
                           </ListGroup.Item>
@@ -190,7 +190,7 @@ const ChatListScreen = ({ history }) => {
           <Col className='my-1'>
             <Form.Control
               id='inlineFormInputName'
-              placeholder='Jane Doe'
+              placeholder='Type in your messsage'
               onChange={(e) => setMessageContent(e.target.value)}
             />
           </Col>

@@ -73,17 +73,22 @@ const LoginScreen = ({ location, history }) => {
               onChange={(e) => setPassword(e.target.value)}
             ></Form.Control>
           </Form.Group>
-          <Button type='submit' variant='primary'>
+          <Row>
+            <Col>
+            <Button type='submit' variant='primary'>
             Sign In
           </Button>
-          <GoogleLogin
+          </Col>
+            <Col>
+            <GoogleLogin
             clientId={'732153532058-8unvj35o7ntkdnopv8l0d0l67fj14igl.apps.googleusercontent.com'}
             buttonText='Log in with Google'
             onSuccess={responseGoogle}
             onFailure={responseGoogle}
             cookiePolicy={'single_host_origin'}
           />
-          <div class='g-signin2' data-onsuccess='onSignIn'></div>
+            </Col>
+          </Row>
         </Form>
 
         <Row className='py-3'>

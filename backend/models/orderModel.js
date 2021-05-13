@@ -32,7 +32,7 @@ const orderSchema = mongoose.Schema(
       },
     },
 
-    reviews: [reviewSchema],
+    reviews: reviewSchema,
     shippingAddress: {
       address: { type: String, required: true },
       dateTime: { type: String, required: true },
