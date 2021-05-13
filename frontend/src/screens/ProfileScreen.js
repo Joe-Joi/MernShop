@@ -34,13 +34,10 @@ const ProfileScreen = ({ history, match }) => {
   const userReviews = useSelector((state) => state.userReviews);
   const { loading: reviewsLoading, error: reviewError, reviews } = userReviews;
   useEffect(() => {
-    //todo
-
     if (!userInfo) {
       history.push('/login');
     } else {
       if (!user || !user.name || success || user.email !== match.params.email) {
-        console.log(user, 'execute?', match.params.email);
         dispatch({ type: USER_UPDATE_PROFILE_RESET });
         dispatch({ type: USER_LIST_REVIEWS_RESET });
         dispatch(getUserDetails(match.params.email));
