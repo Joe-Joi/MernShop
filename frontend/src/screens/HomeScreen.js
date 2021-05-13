@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Alert, Button } from 'react-bootstrap';
 import Product from '../components/Product';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
@@ -27,7 +27,20 @@ const HomeScreen = ({ match }) => {
 
   return (
     <>
+      <>
+        <Button variant="outline-secondary" href="/">
+          selling
+        </Button>{' '}
+        <Button
+          variant="outline-secondary"
+          href="/requesting"
+          className="mx-auto my-2"
+        >
+          requesting
+        </Button>
+      </>
       <Meta />
+
       {!keyword ? (
         <ProductCarousel />
       ) : (

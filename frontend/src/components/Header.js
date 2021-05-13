@@ -21,11 +21,9 @@ const Header = () => {
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container>
           <LinkContainer to="/">
-            <Navbar.Brand>Selling</Navbar.Brand>
+            <Navbar.Brand>Southampton book exchange</Navbar.Brand>
           </LinkContainer>
-          <LinkContainer to="/requesting">
-            <Navbar.Brand>Requesting</Navbar.Brand>
-          </LinkContainer>
+
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Route render={({ history }) => <SearchBox history={history} />} />

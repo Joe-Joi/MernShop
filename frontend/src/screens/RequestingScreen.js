@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import Product from '../components/Product';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
@@ -26,10 +26,19 @@ const RequestingScreen = ({ match }) => {
 
   return (
     <>
+      <>
+        <Button variant="outline-secondary" href="/">
+          selling
+        </Button>{' '}
+        <Button
+          variant="outline-secondary"
+          href="/requesting"
+          className="mx-auto my-2"
+        >
+          requesting
+        </Button>
+      </>
       <Meta />
-      <Link to="/" className="btn btn-light">
-        Go Back
-      </Link>
 
       <h1>Buyers are requesting...</h1>
       {loading ? (
