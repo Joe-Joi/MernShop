@@ -21,6 +21,7 @@ import {
   userListReducer,
   userDeleteReducer,
   userUpdateReducer,
+  userSocketReducer,
 } from './reducers/userReducers';
 import {
   orderCreateReducer,
@@ -31,7 +32,14 @@ import {
   orderListMySoldReducer,
   orderListReducer,
   orderInfoReducer,
+  
 } from './reducers/orderReducers';
+
+import {
+  userChatListReducer,
+  userMessageSendReducer,
+  selectedChatReducer
+} from './reducers/userChatReducers'
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -58,7 +66,15 @@ const reducer = combineReducers({
   orderListMy: orderListMyReducer,
   orderListMySold: orderListMySoldReducer,
   orderList: orderListReducer,
+  userChatList: userChatListReducer,
+  userMessageSend: userMessageSendReducer,
+  selectedChat: selectedChatReducer,
+  userGlobalSocket:userSocketReducer,
 });
+
+// const userInfoFromStorage = localStorage.getItem('userSocket')
+//   ? JSON.parse(localStorage.getItem('userSocket'))
+//   : null;
 
 const userInfoFromStorage = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo'))

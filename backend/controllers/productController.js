@@ -8,15 +8,42 @@ const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
   const status = req.query.status;
-  const keyword = req.query.keyword
-    ? {
-        name: {
-          $regex: req.query.keyword,
-          //lowercase or uppercase insensitive
-          $options: 'i',
-        },
-      }
-    : {};
+  var [prefix, keyword] = req.query.keyword.split('_');
+  if(keyword){
+    switch(prefix){
+      case 'title':
+        keyword = {
+          name: {
+            $regex: keyword,
+            //lowercase or uppercase insensitive
+            $options: 'i',
+          },
+        };
+        break
+      case 'author':
+        keyword = {
+          author: {
+            $regex: keyword,
+            //lowercase or uppercase insensitive
+            $options: 'i',
+          },
+        };
+        break;
+      case 'category':
+        keyword = {
+          category: {
+            $regex: keyword,
+            //lowercase or uppercase insensitive
+            $options: 'i',
+          },
+        };
+        break;
+      default:
+        break;
+    }
+  }else{
+    keyword = {};
+  }
   if (status) {
     keyword['status'] = status;
   }

@@ -24,13 +24,44 @@ import {
   USER_UPDATE_FAIL,
   USER_UPDATE_SUCCESS,
   USER_UPDATE_REQUEST,
+  USER_SOCKET_CREATE,
 } from '../constants/userConstants';
 import {
   ORDER_LIST_MY_RESET,
   ORDER_LIST_MY_SOLD_RESET,
 } from '../constants/orderConstants';
 import { MY_PRODUCT_LIST_RESET } from '../constants/productConstants';
+import io from 'socket.io-client'
 
+export const getSocket = () => async (dispatch,getState) =>{
+  try {
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    if(!userInfo){
+      dispatch(logout())
+    }
+    let iosocket = io("http://localhost:5000", {
+      extraHeaders: {
+        "my-custom-header": userInfo._id
+      }
+    })
+
+    dispatch({
+      type: USER_SOCKET_CREATE,
+      socket: iosocket
+    });
+  } catch (error) {
+    console.log(JSON.stringify({
+      type: USER_LOGIN_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    }));
+  }
+}
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({
@@ -49,12 +80,15 @@ export const login = (email, password) => async (dispatch) => {
       config
     );
 
+
     dispatch({
       type: USER_LOGIN_SUCCESS,
       payload: data,
     });
 
     localStorage.setItem('userInfo', JSON.stringify(data));
+
+    dispatch(getSocket())
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,

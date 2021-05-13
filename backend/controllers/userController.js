@@ -166,6 +166,22 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 })
 
+const getUserByEmail = asyncHandler(async (req,res)=>{
+  const user = await User.findOne({email:req.params.email})
+  console.log("request email"+JSON.stringify(req.params.email))
+  if (user) {
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    })
+  } else {
+    res.status(401)
+    throw new Error('Invalid email')
+  }
+})
+
 export {
   authUser,
   registerUser,
@@ -175,4 +191,5 @@ export {
   deleteUser,
   getUserById,
   updateUser,
+  getUserByEmail,
 }

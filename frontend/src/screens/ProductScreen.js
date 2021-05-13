@@ -11,7 +11,8 @@ import {
 } from '../actions/productActions';
 import { saveOrderProductInfo } from '../actions/orderActions';
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants';
-
+import axios from 'axios';
+import 'socket.io-client'
 const ProductScreen = ({ history, match }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -20,9 +21,10 @@ const ProductScreen = ({ history, match }) => {
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
-
+  const userGlobalSocket = useSelector(state => state.userGlobalSocket)
+  const {userSocket} = userGlobalSocket
   const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo} = userLogin;
 
   const productReviewCreate = useSelector((state) => state.productReviewCreate);
   const {
@@ -30,7 +32,6 @@ const ProductScreen = ({ history, match }) => {
     loading: loadingProductReview,
     error: errorProductReview,
   } = productReviewCreate;
-
   useEffect(() => {
     if (successProductReview) {
       setRating(0);
@@ -59,6 +60,57 @@ const ProductScreen = ({ history, match }) => {
       })
     );
   };
+
+  const contactHandler = async(e) => {
+    if(!userInfo){
+      history.push('/login')
+    }
+    const product_id = product._id
+    console.log(product.sellerEmail)
+    var {data} = await axios.get(`/api/users/getUserInfo/${product.sellerEmail}`)
+    console.log("data:"+JSON.stringify(data))
+    const seller_id = data._id
+    //console.log(JSON.stringify(seller))
+    const buyer_id = userInfo._id
+    console.log(buyer_id+'     '+seller_id)
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    var chat = await axios.post(
+      '/api/chatlist/chat/',
+      { product_id, seller_id, buyer_id },
+      config
+    );
+    chat = chat.data
+    console.log(JSON.stringify(chat))
+    if(chat!="none"){
+      history.push('/chatlist')
+    }else{
+      console.log(buyer_id+'     '+seller_id)
+      let newchat = {
+        productId: product_id, 
+        sellerId: seller_id, 
+        buyerId: buyer_id,
+        unread:true,
+        messages:[{
+          srcUser: buyer_id,
+          destUser:seller_id,
+          msgContent:'Hi, I am interested in your book~',
+          msgTime:Date.now(),
+        }]
+      }
+      
+      await userSocket.emit("createNewChat", newchat)
+      history.push('/chatlist')
+     
+    }
+  }
+
+
+
 
   return (
     <>
@@ -115,7 +167,7 @@ const ProductScreen = ({ history, match }) => {
                         <Button
                           className="btn-block"
                           type="button"
-                          disabled={true}
+                          onClick={contactHandler}
                         >
                           Contact the Seller
                         </Button>

@@ -22,13 +22,14 @@ import ProductCreateScreen from './screens/ProductCreateScreen';
 import OrderListScreen from './screens/OrderListScreen';
 import MyProductScreen from './screens/MyProductScreen';
 import MySoldOrderScreen from './screens/MySoldOrderScreen';
-
+import ChatListScreen from './screens/ChatListScreen'
 const App = () => {
   return (
     <Router>
       <Header />
       <main className="py-3">
         <Container>
+          <Route path='/chatlist' component={ChatListScreen} />
           <Route path="/order/:id" component={OrderScreen} />
           <Route path="/shipping" component={ShippingScreen} />
           <Route path="/payment" component={PaymentScreen} />

@@ -9,6 +9,7 @@ import {
   deleteUser,
   getUserById,
   updateUser,
+  getUserByEmail
 } from '../controllers/userController.js'
 import { protect, admin } from '../middleware/authMiddleware.js'
 
@@ -23,5 +24,6 @@ router
   .delete(protect, admin, deleteUser)
   .get(protect, admin, getUserById)
   .put(protect, admin, updateUser)
-
+router.route('/getUserInfo/:email').get(getUserByEmail)
+router.route('/userinfo/:id').get(getUserById)
 export default router
