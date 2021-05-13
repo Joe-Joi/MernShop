@@ -126,7 +126,9 @@ const ProductCreateScreen = ({ history }) => {
                 type="number"
                 placeholder="Enter price"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) =>
+                  setPrice(e.target.value > 0 ? e.target.value : 0)
+                }
               ></Form.Control>
             </Form.Group>
 

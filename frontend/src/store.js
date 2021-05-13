@@ -11,7 +11,6 @@ import {
   myProductListReducer,
   productStatusUpdateReducer,
 } from './reducers/productReducers';
-import { cartReducer } from './reducers/cartReducers';
 import {
   userLoginReducer,
   userRegisterReducer,

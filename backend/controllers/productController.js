@@ -107,6 +107,9 @@ const createProduct = asyncHandler(async (req, res) => {
     condition,
     status,
   } = req.body;
+  if (price < 0) {
+    throw new Error('price must >= 0!');
+  }
   const product = new Product({
     name: name,
     price: price,

@@ -27,20 +27,12 @@ const RequestingScreen = ({ match }) => {
   return (
     <>
       <>
-        <Button
-          variant="outline-secondary"
-          href="/"
-          className="mx-auto my-2 btn-sm"
-        >
+        <Link to="/" className="btn btn-dark my-2">
           selling
-        </Button>{' '}
-        <Button
-          variant="outline-secondary"
-          href="/requesting"
-          className="mx-auto my-2 btn-sm"
-        >
-          requesting
-        </Button>
+        </Link>{' '}
+        <Link to="/requesting" className="btn btn-dark my-2">
+          Requesting
+        </Link>
       </>
       <Meta />
 
