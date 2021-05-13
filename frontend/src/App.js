@@ -46,7 +46,7 @@ const App = () => {
           <Route path="/product/:id" component={ProductScreen} exact />
           <Route path="/cart/:id?" component={CartScreen} />
           <Route path="/admin/userlist" component={UserListScreen} />
-          <Route path="/admin/user/:id/edit" component={UserEditScreen} />
+          <Route path="/admin/user/:email/edit" component={UserEditScreen} />
           <Route path="/myproducts" component={MyProductScreen} exact />
           <Route path="/myrequesting" component={MyRequestingScreen} exact />
           <Route path="/newrequest" component={RequestCreateScreen} exact />
