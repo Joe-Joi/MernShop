@@ -29,22 +29,17 @@ const HomeScreen = ({ match }) => {
     <>
       <>
         <Link to="/" className="btn btn-dark my-2">
-          selling
+          Selling market
         </Link>{' '}
         <Link to="/requesting" className="btn btn-dark my-2">
-          Requesting
+          Requesting market
         </Link>
       </>
       <Meta />
 
-      {!keyword ? (
-        <ProductCarousel />
-      ) : (
-        <Link to="/" className="btn btn-light">
-          Go Back
-        </Link>
-      )}
-      <h1>Latest Books</h1>
+      {!keyword && <ProductCarousel />}
+
+      <h1>SELLING BOOKS</h1>
       {loading ? (
         <Loader />
       ) : error ? (

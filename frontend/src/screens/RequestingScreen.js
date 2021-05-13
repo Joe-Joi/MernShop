@@ -28,10 +28,10 @@ const RequestingScreen = ({ match }) => {
     <>
       <>
         <Link to="/" className="btn btn-dark my-2">
-          selling
+          Selling Market
         </Link>{' '}
         <Link to="/requesting" className="btn btn-dark my-2">
-          Requesting
+          Requesting Market
         </Link>
       </>
       <Meta />
