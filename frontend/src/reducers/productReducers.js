@@ -23,6 +23,7 @@ import {
   MY_PRODUCT_LIST_REQUEST,
   MY_PRODUCT_LIST_SUCCESS,
   MY_PRODUCT_LIST_RESET,
+  PRODUCT_DETAILS_RESET,
   PRODUCT_STATUS_UPDATE_REQUEST,
   PRODUCT_STATUS_UPDATE_SUCCESS,
   PRODUCT_STATUS_UPDATE_FAIL,
@@ -77,6 +78,8 @@ export const productDetailsReducer = (
       return { loading: false, product: action.payload };
     case PRODUCT_DETAILS_FAIL:
       return { loading: false, error: action.payload };
+    case PRODUCT_DETAILS_RESET:
+      return { product: {} };
     default:
       return state;
   }

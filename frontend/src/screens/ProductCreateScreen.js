@@ -72,6 +72,7 @@ const ProductCreateScreen = ({ history }) => {
         category,
         condition,
         description,
+        status: 'selling',
       })
     );
   };
@@ -92,7 +93,7 @@ const ProductCreateScreen = ({ history }) => {
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Title</Form.Label>
               <Form.Control
                 type="name"
                 placeholder="Enter name"

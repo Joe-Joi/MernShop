@@ -54,7 +54,7 @@ export const listProducts = (
   }
 };
 
-export const listMyProducts = (pageNumber = '') => async (
+export const listMyProducts = (pageNumber = '', status) => async (
   dispatch,
   getState
 ) => {
@@ -69,7 +69,7 @@ export const listMyProducts = (pageNumber = '') => async (
       },
     };
     const { data } = await axios.get(
-      `/api/products/myproducts?pageNumber=${pageNumber}`,
+      `/api/products/myproducts?pageNumber=${pageNumber}&status=${status}`,
       config
     );
 

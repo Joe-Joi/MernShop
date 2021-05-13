@@ -21,7 +21,10 @@ const Header = () => {
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container>
           <LinkContainer to="/">
-            <Navbar.Brand>ProShop</Navbar.Brand>
+            <Navbar.Brand>Selling</Navbar.Brand>
+          </LinkContainer>
+          <LinkContainer to="/requesting">
+            <Navbar.Brand>Requesting</Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -32,8 +35,11 @@ const Header = () => {
                   <LinkContainer to={`/profile/${userInfo.email}`}>
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
+                  <LinkContainer to="/myrequesting">
+                    <NavDropdown.Item>My Requesting Books</NavDropdown.Item>
+                  </LinkContainer>
                   <LinkContainer to="/myorders">
-                    <NavDropdown.Item>My Orders</NavDropdown.Item>
+                    <NavDropdown.Item>My Purchased Books</NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/myproducts">
                     <NavDropdown.Item>My Selling Books</NavDropdown.Item>

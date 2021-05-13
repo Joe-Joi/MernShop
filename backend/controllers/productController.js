@@ -32,7 +32,7 @@ const getProducts = asyncHandler(async (req, res) => {
 // @desc    Fetch on sale products by seller
 // @route   GET /api/myproducts/
 // @access  Public
-const getMySellingProducts = asyncHandler(async (req, res) => {
+const getMyProducts = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
   const count = await Product.countDocuments({
@@ -40,7 +40,7 @@ const getMySellingProducts = asyncHandler(async (req, res) => {
   });
   const products = await Product.find({
     sellerEmail: req.user.email,
-    status: 'selling',
+    status: req.query.status,
   })
     .limit(pageSize)
     //eg. if page is 3, then skip the first 2 pages' products
@@ -105,6 +105,7 @@ const createProduct = asyncHandler(async (req, res) => {
     author,
     category,
     condition,
+    status,
   } = req.body;
   const product = new Product({
     name: name,
@@ -115,6 +116,7 @@ const createProduct = asyncHandler(async (req, res) => {
     category: category,
     condition: condition,
     description: description,
+    status: status,
   });
 
   const createdProduct = await product.save();
@@ -195,6 +197,6 @@ export {
   createProduct,
   updateProduct,
   getTopProducts,
-  getMySellingProducts,
+  getMyProducts,
   updateProductStatus,
 };

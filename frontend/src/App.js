@@ -21,7 +21,10 @@ import ProductEditScreen from './screens/ProductEditScreen';
 import ProductCreateScreen from './screens/ProductCreateScreen';
 import OrderListScreen from './screens/OrderListScreen';
 import MyProductScreen from './screens/MyProductScreen';
+import MyRequestingScreen from './screens/MyRequestingScreen';
 import MySoldOrderScreen from './screens/MySoldOrderScreen';
+import RequestingScreen from './screens/RequestingScreen';
+import RequestCreateScreen from './screens/RequestCreateScreen';
 
 const App = () => {
   return (
@@ -45,6 +48,8 @@ const App = () => {
           <Route path="/admin/userlist" component={UserListScreen} />
           <Route path="/admin/user/:id/edit" component={UserEditScreen} />
           <Route path="/myproducts" component={MyProductScreen} exact />
+          <Route path="/myrequesting" component={MyRequestingScreen} exact />
+          <Route path="/newrequest" component={RequestCreateScreen} exact />
           <Route
             path="/myproducts/:pageNumber"
             component={MyProductScreen}
@@ -64,6 +69,7 @@ const App = () => {
           <Route path="/admin/orderlist" component={OrderListScreen} />
           <Route path="/search/:keyword" component={HomeScreen} exact />
           <Route path="/page/:pageNumber" component={HomeScreen} exact />
+          <Route path="/requesting" component={RequestingScreen} exact />
           <Route
             path="/search/:keyword/page/:pageNumber"
             component={HomeScreen}

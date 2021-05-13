@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -18,9 +18,6 @@ import { listProductDetails } from '../actions/productActions';
 import { saveOrderProductInfo } from '../actions/orderActions';
 
 const ProductScreen = ({ history, match }) => {
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
-
   const dispatch = useDispatch();
 
   const productDetails = useSelector((state) => state.productDetails);
@@ -81,64 +78,109 @@ const ProductScreen = ({ history, match }) => {
                 </ListGroup.Item>
               </ListGroup>
             </Col>
-            <Col md={3}>
-              <Card>
-                <ListGroup variant="flush">
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Seller:</Col>
-                      <Col>
-                        <LinkContainer to={`/profile/${product.sellerEmail}`}>
-                          <Alert.Link className="md" variant="light">
-                            {product.sellerEmail}
-                          </Alert.Link>
-                        </LinkContainer>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-                  {!userInfo || userInfo.email !== product.sellerEmail ? (
-                    <>
+            {product.status === 'requesting' ? (
+              <Col md={3}>
+                <Card>
+                  <ListGroup variant="flush">
+                    <ListGroup.Item>
+                      <Row>
+                        <Col>Buyer:</Col>
+                        <Col>
+                          <LinkContainer to={`/profile/${product.sellerEmail}`}>
+                            <Alert.Link className="md" variant="light">
+                              {product.sellerEmail}
+                            </Alert.Link>
+                          </LinkContainer>
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+                    {!userInfo || userInfo.email !== product.sellerEmail ? (
+                      <>
+                        <>
+                          <Button
+                            className="btn-block"
+                            type="button"
+                            disabled={product.status !== 'requesting'}
+                          >
+                            Contact the buyer
+                          </Button>
+                        </>
+                      </>
+                    ) : (
                       <ListGroup.Item>
                         <Button
+                          onClick={productManageHandler}
                           className="btn-block"
                           type="button"
-                          disabled={true}
+                          disabled={product.status !== 'requesting'}
                         >
-                          Contact the Seller
+                          Manage This Request
                         </Button>
                       </ListGroup.Item>
+                    )}
+                  </ListGroup>
+                </Card>
+              </Col>
+            ) : (
+              <Col md={3}>
+                <Card>
+                  <ListGroup variant="flush">
+                    <ListGroup.Item>
+                      <Row>
+                        <Col>Seller:</Col>
+                        <Col>
+                          <LinkContainer to={`/profile/${product.sellerEmail}`}>
+                            <Alert.Link className="md" variant="light">
+                              {product.sellerEmail}
+                            </Alert.Link>
+                          </LinkContainer>
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+                    {!userInfo || userInfo.email !== product.sellerEmail ? (
+                      <>
+                        <ListGroup.Item>
+                          <Button
+                            className="btn-block"
+                            type="button"
+                            disabled={true}
+                          >
+                            Contact the Seller
+                          </Button>
+                        </ListGroup.Item>
 
+                        <ListGroup.Item>
+                          <Button
+                            onClick={requestBookHandler}
+                            className="btn-block"
+                            type="button"
+                            disabled={product.status !== 'selling'}
+                          >
+                            Request It
+                          </Button>
+                        </ListGroup.Item>
+                      </>
+                    ) : (
                       <ListGroup.Item>
                         <Button
-                          onClick={requestBookHandler}
+                          onClick={productManageHandler}
                           className="btn-block"
                           type="button"
                           disabled={product.status !== 'selling'}
                         >
-                          Request It
+                          Manage This Book
                         </Button>
                       </ListGroup.Item>
-                    </>
-                  ) : (
-                    <ListGroup.Item>
-                      <Button
-                        onClick={productManageHandler}
-                        className="btn-block"
-                        type="button"
-                        disabled={product.status !== 'selling'}
-                      >
-                        Manage This Book
-                      </Button>
-                    </ListGroup.Item>
-                  )}
-                  {product.status === 'sold' && (
-                    <ListGroup.Item>
-                      <Message variant="warning">This book is sold!</Message>
-                    </ListGroup.Item>
-                  )}
-                </ListGroup>
-              </Card>
-            </Col>
+                    )}
+                    {product.status === 'sold' && (
+                      <ListGroup.Item>
+                        <Message variant="warning">This book is sold!</Message>
+                      </ListGroup.Item>
+                    )}
+                  </ListGroup>
+                </Card>
+              </Col>
+            )}
           </Row>
           <Row></Row>
         </>

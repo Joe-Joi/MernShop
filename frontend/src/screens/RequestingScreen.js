@@ -6,11 +6,10 @@ import Product from '../components/Product';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import Paginate from '../components/Paginate';
-import ProductCarousel from '../components/ProductCarousel';
 import Meta from '../components/Meta';
 import { listProducts } from '../actions/productActions';
 
-const HomeScreen = ({ match }) => {
+const RequestingScreen = ({ match }) => {
   const keyword = match.params.keyword;
 
   const pageNumber = match.params.pageNumber || 1;
@@ -21,21 +20,18 @@ const HomeScreen = ({ match }) => {
   const { loading, error, products, page, pages } = productList;
 
   useEffect(() => {
-    //HomeScreen only shows books on selling
-    dispatch(listProducts(keyword, pageNumber, 'selling'));
+    //Screen for advertising products
+    dispatch(listProducts(keyword, pageNumber, 'requesting'));
   }, [dispatch, keyword, pageNumber]);
 
   return (
     <>
       <Meta />
-      {!keyword ? (
-        <ProductCarousel />
-      ) : (
-        <Link to="/" className="btn btn-light">
-          Go Back
-        </Link>
-      )}
-      <h1>Latest Books</h1>
+      <Link to="/" className="btn btn-light">
+        Go Back
+      </Link>
+
+      <h1>Buyers are requesting...</h1>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -61,4 +57,4 @@ const HomeScreen = ({ match }) => {
   );
 };
 
-export default HomeScreen;
+export default RequestingScreen;

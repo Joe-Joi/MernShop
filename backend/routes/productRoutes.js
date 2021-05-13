@@ -7,12 +7,12 @@ import {
   createProduct,
   updateProduct,
   getTopProducts,
-  getMySellingProducts,
+  getMyProducts,
   updateProductStatus,
 } from '../controllers/productController.js';
-import { protect, admin } from '../middleware/authMiddleware.js';
+import { protect } from '../middleware/authMiddleware.js';
 
-router.route('/myproducts').get(protect, getMySellingProducts);
+router.route('/myproducts').get(protect, getMyProducts);
 router.route('/update/status/:id').put(protect, updateProductStatus);
 // router.put('/update/status/:id', updateProductStatus);
 router.route('/').get(getProducts);

@@ -7,6 +7,7 @@ import CheckoutSteps from '../components/CheckoutSteps';
 import { createOrder, saveOrderProductInfo } from '../actions/orderActions';
 import { ORDER_CREATE_RESET } from '../constants/orderConstants';
 import { USER_DETAILS_RESET } from '../constants/userConstants';
+import { PRODUCT_DETAILS_RESET } from '../constants/productConstants';
 
 const PlaceOrderScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -24,8 +25,8 @@ const PlaceOrderScreen = ({ history }) => {
       history.push(`/order/${order._id}`);
       dispatch({ type: USER_DETAILS_RESET });
       dispatch({ type: ORDER_CREATE_RESET });
+      dispatch({ type: PRODUCT_DETAILS_RESET });
       //mark the product as sold avoid repeating order
-      product.status = 'sold';
       dispatch(saveOrderProductInfo(product));
     }
   }, [history, success]);

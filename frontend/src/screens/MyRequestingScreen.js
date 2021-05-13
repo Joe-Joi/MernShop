@@ -8,7 +8,7 @@ import Paginate from '../components/Paginate';
 import { deleteProduct, listMyProducts } from '../actions/productActions';
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants';
 
-const MyProductScreen = ({ history, match }) => {
+const MyRequestingScreen = ({ history, match }) => {
   const pageNumber = match.params.pageNumber || 1;
 
   const dispatch = useDispatch();
@@ -42,9 +42,9 @@ const MyProductScreen = ({ history, match }) => {
       history.push('/login');
     }
     if (successCreate) {
-      history.push('/myproducts');
+      history.push('/myrequesting');
     } else {
-      dispatch(listMyProducts(pageNumber, 'selling'));
+      dispatch(listMyProducts(pageNumber, 'requesting'));
     }
   }, [
     dispatch,
@@ -69,12 +69,12 @@ const MyProductScreen = ({ history, match }) => {
     <>
       <Row className="align-items-center">
         <Col>
-          <h1>MY SELLING BOOKS</h1>
+          <h1>MY REQUESTING BOOKS</h1>
         </Col>
         <Col className="text-right">
-          <LinkContainer to={'/newproduct'}>
+          <LinkContainer to={'/newrequest'}>
             <Button className="my-3">
-              <i className="fas fa-plus"></i> SELL ANOTHER BOOK
+              <i className="fas fa-plus"></i> REQUEST ANOTHER BOOK
             </Button>
           </LinkContainer>
         </Col>
@@ -137,4 +137,4 @@ const MyProductScreen = ({ history, match }) => {
   );
 };
 
-export default MyProductScreen;
+export default MyRequestingScreen;
