@@ -50,6 +50,7 @@ export const getSocket = () => async (dispatch, getState) => {
       },
     });
 
+    localStorage.setItem('userSocket', JSON.stringify(iosocket))
     dispatch({
       type: USER_SOCKET_CREATE,
       socket: iosocket,
@@ -91,7 +92,7 @@ export const login = (email, password) => async (dispatch) => {
 
     localStorage.setItem('userInfo', JSON.stringify(data));
 
-    dispatch(getSocket());
+    //dispatch(getSocket());
   } catch (error) {
     dispatch({
       type: USER_LOGIN_FAIL,

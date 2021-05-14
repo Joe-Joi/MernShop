@@ -15,7 +15,7 @@ import uploadRoutes from './routes/uploadRoutes.js';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import userChatRoutes from './routes/userChatRoutes.js';
-dotenv.config({ path: '../.env' });
+dotenv.config();
 console.log(process.env.MONGO_URI);
 connectDB();
 
@@ -75,7 +75,8 @@ const PORT = process.env.PORT || 5000;
 
 let socketPool = [];
 io.on('connection', (socket) => {
-  console.log(socket.handshake.headers['my-custom-header'] + ' connected');
+  console.log(socket.id + ' connected');
+  //console.log(socket.handshake.headers['my-custom-header'] + ' connected');
   socketPool.push({
     socketId: socket.id,
     socketUserId: socket.handshake.headers['my-custom-header'],
@@ -94,18 +95,9 @@ io.on('connection', (socket) => {
       msgTime: message.msgTime,
     };
     updateChat(chatId, message2server);
-    for (var sock of socketPool) {
-      console.log(sock.socketId + '   ' + sock.socketUserId);
-      console.log(JSON.stringify(sock));
-      if (sock.socketUserId == message.destUser._id) {
-        // if(result=='failed'){
-        //   console.log("failed to save chat"+chatId)
-        //   break
-        // }
-        socket.to(sock.socketId).emit('private-message', chatId, message);
-        break;
-      }
-    }
+
+    socket.broadcast.emit('private-message', chatId, message);
+    
   });
 
   socket.on('createNewChat', (newchat) => {

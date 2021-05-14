@@ -8,7 +8,7 @@ import { createOrder, saveOrderProductInfo } from '../actions/orderActions';
 import { ORDER_CREATE_RESET } from '../constants/orderConstants';
 import { USER_DETAILS_RESET } from '../constants/userConstants';
 import { PRODUCT_DETAILS_RESET } from '../constants/productConstants';
-
+import userSocket from '../socketMidle'
 import axios from 'axios';
 const PlaceOrderScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -18,8 +18,8 @@ const PlaceOrderScreen = ({ history }) => {
   const { shippingAddress, product } = useSelector((state) => state.orderInfo);
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-  const userGlobalSocket = useSelector((state) => state.userGlobalSocket);
-  const { userSocket } = userGlobalSocket;
+  // const userGlobalSocket = useSelector((state) => state.userGlobalSocket);
+  // const { userSocket } = userGlobalSocket;
   if (!shippingAddress.address) {
     history.push('/shipping');
   }

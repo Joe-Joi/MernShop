@@ -16,7 +16,7 @@ import Loader from '../components/Loader';
 import Meta from '../components/Meta';
 import { listProductDetails } from '../actions/productActions';
 import { saveOrderProductInfo } from '../actions/orderActions';
-
+import userSocket from '../socketMidle'
 import axios from 'axios';
 import 'socket.io-client';
 const ProductScreen = ({ history, match }) => {
@@ -24,8 +24,8 @@ const ProductScreen = ({ history, match }) => {
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
-  const userGlobalSocket = useSelector((state) => state.userGlobalSocket);
-  const { userSocket } = userGlobalSocket;
+  // const userGlobalSocket = useSelector((state) => state.userGlobalSocket);
+  // const { userSocket } = userGlobalSocket;
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
@@ -83,7 +83,7 @@ const ProductScreen = ({ history, match }) => {
           {
             srcUser: buyer_id,
             destUser: seller_id,
-            msgContent: 'Hi, I am interested in your book~',
+            msgContent: 'Hi, I Let us talk about the book~',
             msgTime: Date.now(),
           },
         ],

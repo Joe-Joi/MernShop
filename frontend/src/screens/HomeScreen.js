@@ -9,10 +9,10 @@ import Paginate from '../components/Paginate';
 import ProductCarousel from '../components/ProductCarousel';
 import Meta from '../components/Meta';
 import { listProducts } from '../actions/productActions';
-
+import userSocket from '../socketMidle'
 const HomeScreen = ({ match }) => {
   const keyword = match.params.keyword;
-
+  const status = match.params.status
   const pageNumber = match.params.pageNumber || 1;
 
   const dispatch = useDispatch();
@@ -21,8 +21,11 @@ const HomeScreen = ({ match }) => {
   const { loading, error, products, page, pages } = productList;
 
   useEffect(() => {
+    console.log("print user socket at home screen"+userSocket.id)
     //HomeScreen only shows books on selling
-    dispatch(listProducts(keyword, pageNumber, 'selling'));
+    console.log('client homescreen match: '+JSON.stringify(match))
+    console.log('client homescreen status: '+status)
+    dispatch(listProducts(keyword, pageNumber, status?status:'selling'));
   }, [dispatch, keyword, pageNumber]);
 
   return (

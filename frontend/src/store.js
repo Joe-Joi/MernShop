@@ -1,5 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import userSocket from './socketMidle'
 import { composeWithDevTools } from 'redux-devtools-extension';
 import {
   productListReducer,
@@ -83,12 +84,13 @@ const userInfoFromStorage = localStorage.getItem('userInfo')
 const shippingAddressFromStorage = localStorage.getItem('shippingAddress')
   ? JSON.parse(localStorage.getItem('shippingAddress'))
   : {};
-
+//const userSocketFromStorage = localStorage.getItem('userSocket')?JSON.parse(localStorage.getItem('userSocket')):null;
 const initialState = {
   orderInfo: {
     shippingAddress: shippingAddressFromStorage,
   },
   userLogin: { userInfo: userInfoFromStorage },
+  //userGlobalSocket:{userSocket:userSocketFromStorage},
 };
 
 const middleware = [thunk];

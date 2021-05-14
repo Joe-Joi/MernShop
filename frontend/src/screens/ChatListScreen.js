@@ -21,6 +21,7 @@ import Loader from '../components/Loader'
 import ProductChatingCart from '../components/ProductChatingCart'
 import 'socket.io-client'
 import store from '../store'
+import userSocket from '../socketMidle'
 const ChatListScreen = ({ history }) => {
   const dispatch = useDispatch()
   //dispatch(getChatList)
@@ -30,8 +31,8 @@ const ChatListScreen = ({ history }) => {
   const { loading, error, chatlist } = userChatList
   //let socket = useSelector((state) => state.io)
   //console.log("????????"+chatlist)
-  const userGlobalSocket = useSelector(state => state.userGlobalSocket)
-  const {userSocket} = userGlobalSocket
+  //const userGlobalSocket = useSelector(state => state.userGlobalSocket)
+  //const {userSocket} = userGlobalSocket
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo} = userLogin
   const [messageContent, setMessageContent] = useState('')
@@ -39,22 +40,23 @@ const ChatListScreen = ({ history }) => {
   
   useEffect(() => {
     if (userInfo) {
+      console.log("print user socket at chatlist screen"+userSocket.id)
       //dispatch(updateChatList([]))
       console.log(userInfo._id)
       dispatch(getChatList(userInfo._id))
-      dispatch(setSelectedChat(0))
-      if(!userSocket.connected){
-        history.push('/logout')
-        history.push('/login')
-      }
+      dispatch(setSelectedChat('0'))
       userSocket.on("private-message",(chatId,message)=>{
-        console.log("收到消息啦！！！")
+        console.log("message received")
         console.log(chatId)
         let currentChatlist = store.getState().userChatList.chatlist
-        console.log(JSON.stringify(currentChatlist))
+        //console.log(JSON.stringify(currentChatlist))
         const chat = currentChatlist.filter(function (chat) {
           return chat._id == chatId
         })[0]
+        if(!chat){
+          dispatch(getChatList(userInfo._id))
+          return
+        }
         // console.log(state.userChatList.chatlist)
         // console.log(state.userChatList.chatlist[0])
         // console.log(JSON.stringify(chatlist))
@@ -65,9 +67,8 @@ const ChatListScreen = ({ history }) => {
           }
         }
         dispatch(updateChatList(currentChatlist))
-        dispatch(setSelectedChat(chatId))
+        //dispatch(setSelectedChat(chatId))
       })
-      
       //setChats(chatlist)
       //console.log("after:"+selectedChat)
     } else {
@@ -86,6 +87,15 @@ const ChatListScreen = ({ history }) => {
     e.preventDefault()
     //setMessageContent({})
     console.log(messageContent)
+    if(JSON.stringify(selectedChatId).length<1){
+      alert('Choose a conversation to send the message')
+      return
+    }
+    if(messageContent==''){
+      alert('message cannot be null')
+      return
+    }
+    //if()
     //console.log(selectedChatId)
     const chat = chatlist.filter(function (chat) {
       return chat._id === selectedChatId
@@ -127,8 +137,6 @@ const ChatListScreen = ({ history }) => {
     //console.log(chatlist)
     document.getElementById("inlineFormInputName").value=''
     dispatch(updateChatList(chatlist))
-
-
   }
 
   //const selectedChat = useSelector((state) => state.selectedChat)
@@ -141,7 +149,7 @@ const ChatListScreen = ({ history }) => {
     
     {!error?(
       <>
-      <Tab.Container id='left-tabs-example' defaultActiveKey='first' fixed>
+      <Tab.Container id='left-tabs-example' defaultActiveKey={selectedChatId} fixed>
         <Row>
           <Col sm={3}>
             {
@@ -187,6 +195,7 @@ const ChatListScreen = ({ history }) => {
       <Form onSubmit={sendMessageHandler}>
         <Col sm={3}></Col>
         <Form.Row className='align-items-center'>
+          <Col sm={3}></Col>
           <Col className='my-1'>
             <Form.Control
               id='inlineFormInputName'

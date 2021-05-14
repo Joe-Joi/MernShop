@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState,useDispatch} from 'react';
 import { Form, Button } from 'react-bootstrap';
-
 const SearchBox = ({ history }) => {
   const [keyword, setKeyword] = useState('');
   //const [prefix, setPrefix] = useState('')
   const submitHandler = (e) => {
     e.preventDefault();
+    var status = document.getElementById('market').value.split(' ')[0];
     var prefix = document.getElementById('prefix').value;
     if (keyword.trim()) {
-      history.push(`/search/${prefix + '_' + keyword}`);
+      console.log('client key word'+prefix+'_'+keyword)
+      var keyword2server = prefix+'_'+keyword
+      //dispatch(listProducts(prefix+'_'+keyword, '', market.split(' ')[0]));
+      history.push(`/search/${status}&${keyword2server}&pageNumber=`);
     } else {
       history.push('/');
     }

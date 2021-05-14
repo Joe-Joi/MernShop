@@ -8,6 +8,8 @@ const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
   const status = req.query.status;
+  console.log("query.keyword:"+req.query.keyword)
+  console.log("query.status:"+req.query.status)
   var [prefix, keyword] = req.query.keyword.split('_');
   if(keyword){
     switch(prefix){

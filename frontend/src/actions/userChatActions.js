@@ -52,6 +52,8 @@ export const getChatList = (userId) => async (dispatch) => {
           'Content-Type': 'application/json',
         },
       }
+
+      
       const tmp = data
       var chatlist = []
       for(var chat of tmp){
@@ -78,6 +80,7 @@ export const getChatList = (userId) => async (dispatch) => {
         chatlist.push({_id,seller,buyer,product,messages})
       }
 
+      //localStorage.setItem('chatlist',chatlist)
       //console.log(chatlist)
       dispatch({
         type: USER_CHATLIST_SUCCESS,
