@@ -11,8 +11,8 @@ const getProducts = asyncHandler(async (req, res) => {
   console.log("query.keyword:"+req.query.keyword)
   console.log("query.status:"+req.query.status)
   var [prefix, keyword] = req.query.keyword.split('_');
-  if(keyword){
-    switch(prefix){
+  if (keyword) {
+    switch (prefix) {
       case 'title':
         keyword = {
           name: {
@@ -21,7 +21,7 @@ const getProducts = asyncHandler(async (req, res) => {
             $options: 'i',
           },
         };
-        break
+        break;
       case 'author':
         keyword = {
           author: {
@@ -43,7 +43,7 @@ const getProducts = asyncHandler(async (req, res) => {
       default:
         break;
     }
-  }else{
+  } else {
     keyword = {};
   }
   if (status) {
@@ -109,7 +109,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
   if (product) {
     //check if this delete action allowed. only admin or the seller can delete the book
-    if (product.sellerEmail == user.email || user.isAdmin) {
+    if (product.sellerEmail === user.email || user.isAdmin) {
       await product.remove();
       res.json({ message: 'Product removed!' });
     } else {

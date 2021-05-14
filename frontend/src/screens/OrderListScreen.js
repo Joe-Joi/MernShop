@@ -1,11 +1,24 @@
 import React, { useEffect } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { listOrders } from '../actions/orderActions';
 
+// format ISO date to readable format
+function formDate(dateForm) {
+  if (dateForm === '') {
+    return '';
+  } else {
+    var dateee = new Date(dateForm).toJSON();
+    var date = new Date(+new Date(dateee))
+      .toISOString()
+      .replace(/T/g, ' ')
+      .replace(/\.[\d]{3}Z/, '');
+    return date;
+  }
+}
 const OrderListScreen = ({ history }) => {
   const dispatch = useDispatch();
 
@@ -34,12 +47,12 @@ const OrderListScreen = ({ history }) => {
         <Table striped bordered hover responsive className="table-sm">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>USER</th>
-              <th>DATE</th>
-              <th>TOTAL</th>
-              <th>PAID</th>
-              <th>DELIVERED</th>
+              <th>ORDER ID</th>
+              <th>BOOK</th>
+              <th>BUYER</th>
+              <th>SELLER</th>
+              <th>ORDER DATE</th>
+              <th>Status</th>
               <th></th>
             </tr>
           </thead>
@@ -47,27 +60,32 @@ const OrderListScreen = ({ history }) => {
             {orders.map((order) => (
               <tr key={order._id}>
                 <td>{order._id}</td>
-                <td>{order.user && order.user.name}</td>
-                <td>{order.createdAt.substring(0, 10)}</td>
-                <td>${order.totalPrice}</td>
                 <td>
-                  {order.isPaid ? (
-                    order.paidAt.substring(0, 10)
-                  ) : (
-                    <i className="fas fa-times" style={{ color: 'red' }}></i>
-                  )}
+                  <LinkContainer to={`/product/${order.orderItem.product}`}>
+                    <Alert.Link className="md" variant="light">
+                      {order.orderItem.name}
+                    </Alert.Link>
+                  </LinkContainer>
                 </td>
+                <td>{order.buyer}</td>
+                <td>{order.seller}</td>
+                <td>{formDate(order.createdAt)}</td>
+
                 <td>
-                  {order.isDelivered ? (
-                    order.deliveredAt.substring(0, 10)
+                  {order.isCompleted ? (
+                    <p class="text-success">Completed</p>
+                  ) : order.isExpired ? (
+                    <p class="text-danger">Expired</p>
+                  ) : order.isArranged ? (
+                    <p class="text-info">Arranged</p>
                   ) : (
-                    <i className="fas fa-times" style={{ color: 'red' }}></i>
+                    <p class="text-warning">Waitting Arrangement</p>
                   )}
                 </td>
                 <td>
                   <LinkContainer to={`/order/${order._id}`}>
-                    <Button variant="light" className="btn-sm">
-                      Details
+                    <Button className="btn-sm" variant="dark">
+                      ORDER DETAIL
                     </Button>
                   </LinkContainer>
                 </td>
