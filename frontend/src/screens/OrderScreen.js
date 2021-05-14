@@ -85,9 +85,10 @@ const OrderScreen = ({ match, history }) => {
     } else if (
       //if the current is neither seller or buyer, redirect to homepage
       userInfo.email !== order.seller &&
-      userInfo.email !== order.buyer
+      userInfo.email !== order.buyer &&
+      !userInfo.isAdmin
     ) {
-      history.push('/');
+      history.replace('/');
     }
   }, [
     dispatch,

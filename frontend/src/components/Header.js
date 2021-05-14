@@ -32,7 +32,11 @@ const Header = () => {
                 <Nav.Link>Messages</Nav.Link>
               </LinkContainer>
               {userInfo ? (
-                <NavDropdown title={userInfo.name} id="username">
+                <NavDropdown
+                  title={userInfo.name}
+                  id="username"
+                  className="mr-sm-0 ml-sm-0"
+                >
                   <LinkContainer to={`/profile/${userInfo.email}`}>
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
@@ -60,7 +64,11 @@ const Header = () => {
                 </LinkContainer>
               )}
               {userInfo && userInfo.isAdmin && (
-                <NavDropdown title="Manage" id="adminmenu">
+                <NavDropdown
+                  title="Manage"
+                  id="adminmenu"
+                  className="mr-sm-0 ml-sm-0"
+                >
                   <LinkContainer to="/admin/userlist">
                     <NavDropdown.Item>Users</NavDropdown.Item>
                   </LinkContainer>

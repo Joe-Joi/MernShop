@@ -12,7 +12,7 @@ const Meta = ({ title, description, keywords }) => {
 };
 
 Meta.defaultProps = {
-  title: 'Welcome To Southampton Book Shop',
+  title: 'Welcome To Southampton Book Exchange Platform!',
   description:
     'This is a book exchange platform for students in University of Southampton ',
   keywords: 'buy books, sell books',
