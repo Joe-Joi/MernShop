@@ -7,11 +7,15 @@ const SearchBox = ({ history }) => {
     e.preventDefault();
     var status = document.getElementById('market').value.split(' ')[0];
     var prefix = document.getElementById('prefix').value;
+    console.log(status+' with '+keyword.trim())
+    if(status=='requesting'&&keyword.trim()==''){
+      history.push('/requesting')
+    }
     if (keyword.trim()) {
       console.log('client key word'+prefix+'_'+keyword)
       var keyword2server = prefix+'_'+keyword
       //dispatch(listProducts(prefix+'_'+keyword, '', market.split(' ')[0]));
-      history.push(`/search/${status}&${keyword2server}&pageNumber=`);
+      history.push(`/search/${status}&${keyword2server}`);
     } else {
       history.push('/');
     }

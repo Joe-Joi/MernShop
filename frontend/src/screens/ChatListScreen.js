@@ -106,6 +106,9 @@ const ChatListScreen = ({ history }) => {
     //console.log(messages)
     //console.log(userInfo)
     //console.log("nnd"+chat)
+    if(!chat){
+      return
+    }
     let dest = (userInfo._id==chat.seller._id)?chat.buyer:chat.seller
       
     
