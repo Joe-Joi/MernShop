@@ -19,6 +19,7 @@ import { saveOrderProductInfo } from '../actions/orderActions';
 import userSocket from '../socketMidle'
 import axios from 'axios';
 import 'socket.io-client';
+import store from '../store'
 const ProductScreen = ({ history, match }) => {
   const dispatch = useDispatch();
 
@@ -31,8 +32,13 @@ const ProductScreen = ({ history, match }) => {
 
   useEffect(() => {
     if (!product || !product._id || product._id !== match.params.id) {
-      dispatch(listProductDetails(match.params.id));
+      dispatch(listProductDetails(match.params.id)); 
     }
+    // console.log('zajzjzjjzj'+store.getState().productDetails.product.status)
+    //   if(store.getState().productDetails.product.status==='deleted'){
+    //     history.push('/')
+    //   }
+    
   }, [dispatch, match]);
 
   const requestBookHandler = () => {
@@ -103,8 +109,10 @@ const ProductScreen = ({ history, match }) => {
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
-      ) : (
+      ) :(product.status==='deleted')?(<Message variant="danger">This product has been {product.status}</Message>):
+       (
         <>
+        
           <Meta title={product.name} />
           <Row>
             <Col md={6}>

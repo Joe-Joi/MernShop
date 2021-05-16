@@ -40,9 +40,9 @@ const HomeScreen = ({ match }) => {
       </>
       <Meta />
 
-      {!keyword && <ProductCarousel />}
-
-      <h1>SELLING BOOKS</h1>
+      {/* {!keyword && <ProductCarousel />} */}
+      {!keyword}
+      <h1>{status?status:'selling'} books</h1>
       {loading ? (
         <Loader />
       ) : error ? (

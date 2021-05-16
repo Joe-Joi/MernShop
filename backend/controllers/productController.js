@@ -110,7 +110,8 @@ const deleteProduct = asyncHandler(async (req, res) => {
   if (product) {
     //check if this delete action allowed. only admin or the seller can delete the book
     if (product.sellerEmail === user.email || user.isAdmin) {
-      await product.remove();
+      product.status = 'deleted'
+      await product.save();
       res.json({ message: 'Product removed!' });
     } else {
       res.status(404);

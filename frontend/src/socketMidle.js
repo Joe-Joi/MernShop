@@ -1,3 +1,3 @@
 import io from 'socket.io-client'
-const userSocket = io('http://localhost:5000')
+const userSocket = io('http://localhost')
 export default userSocket
